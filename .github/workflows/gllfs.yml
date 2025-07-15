@@ -1,3 +1,4 @@
+name: GLTBDL
 on:
   workflow_dispatch:
     inputs:
@@ -33,6 +34,8 @@ jobs:
           -H "Content-Type: application/json" \
           --data '{"name": "$REPO_ID", "description": "New Project"}' \
           --url "https://gitlab.com/api/v4/projects/"
+          echo '{"name": "$REPO_ID", "description": "New Project"}'
+          
 
           git clone https://oauth2:${{ secrets.GL_PAT }}@gitlab.com/gconsole001/$REPO_ID
           cd "$REPO_ID"
