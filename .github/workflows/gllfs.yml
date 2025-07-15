@@ -24,6 +24,7 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global lfs.activitytimeout 300
           
+          
       - name: TBDLGL
         run: |
           export REPO_ID=$(echo "${{ github.event.inputs.mid }}" | sed 's/:/-/g')
@@ -47,7 +48,8 @@ jobs:
           git add .gitattributes
           git add video
           git commit -mm
-          GIT_CURL_VERBOSE=1 git push --progress
+          export GIT_LFS_FORCE_PROGRESS=1
+          git push --progress
           
       - name: Send telegram
         if: failure()
