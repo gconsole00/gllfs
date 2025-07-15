@@ -32,7 +32,7 @@ jobs:
           curl --request POST \
           -H "PRIVATE-TOKEN: ${{ secrets.GL_PAT }}" \
           -H "Content-Type: application/json" \
-          --data '{"name": "$REPO_ID", "description": "New Project"}' \
+          --data "{"name": "$REPO_ID", "description": "New Project"}" \
           --url "https://gitlab.com/api/v4/projects/"
           echo '{"name": "$REPO_ID", "description": "New Project"}'
           
