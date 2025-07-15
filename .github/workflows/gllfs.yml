@@ -47,7 +47,7 @@ jobs:
           git add .gitattributes
           git add video
           git commit -mm
-          git push
+          GIT_CURL_VERBOSE=1 git push --progress
           
       - name: Send telegram
         if: failure()
