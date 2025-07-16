@@ -33,7 +33,7 @@ jobs:
           export ID=${{ github.event.inputs.mid }}
           
           curl --request POST \
-          --fail-with-body \
+          # --fail-with-body \
           -H "PRIVATE-TOKEN: ${{ secrets.GL_PAT }}" \
           -H "Content-Type: application/json" \
           --data "{\"name\": \"$REPO_ID\", \"visibility\": \"public\"}" \
@@ -43,7 +43,7 @@ jobs:
           
           cd "$REPO_ID"
           
-          aria2c -x16 -j16 "${{ github.event.inputs.dlUrl }}" -O blob
+          wget -nv "${{ github.event.inputs.dlUrl }}" -o blob
           
           git lfs track "blob"
           git add .gitattributes
