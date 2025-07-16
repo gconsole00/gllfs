@@ -45,6 +45,11 @@ jobs:
           git clone https://oauth2:${{ secrets.GL_PAT }}@gitlab.com/gconsole001/$REPO_ID
           
           cd "$REPO_ID"
+          rm -rf *
+          git add . || true
+          git commit -mm || true
+          git push || true
+          
           mv ../blob .
           
           
