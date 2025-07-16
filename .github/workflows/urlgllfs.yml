@@ -31,6 +31,7 @@ jobs:
         run: |
           export REPO_ID=$(echo "${{ github.event.inputs.mid }}" | sed 's/:/-/g')
           export ID=${{ github.event.inputs.mid }}
+          export TB_KEY=${{ secrets.TB_API_KEY }}
           
           aria2c -x 16 "${{ github.event.inputs.dlUrl }}" -o blob
           
