@@ -1,4 +1,4 @@
-name: GLTBDL
+name: GLURLDL
 on:
   workflow_dispatch:
     inputs:
