@@ -39,6 +39,10 @@ jobs:
           
           git clone https://oauth2:${{ secrets.GL_PAT }}@gitlab.com/gconsole001/$REPO_ID
           cd "$REPO_ID"
+          rm -rf *
+          git add . || true
+          git commit -mm || true
+          git push || true
           
           if [[ "$ID" == *":"* ]]; then
             curl https://torrentioproxy.hostproxy.workers.dev/https://stremio.torbox.app/${{ secrets.TB_API_KEY }}/stream/series/$ID.json | jq '.streams[0].url' | xargs -L 1 wget -nv -O blob
