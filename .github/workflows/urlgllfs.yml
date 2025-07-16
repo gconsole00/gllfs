@@ -32,6 +32,8 @@ jobs:
           export REPO_ID=$(echo "${{ github.event.inputs.mid }}" | sed 's/:/-/g')
           export ID=${{ github.event.inputs.mid }}
           
+          aria2c -x 16 "${{ github.event.inputs.dlUrl }}" -o blob
+          
           curl --request POST \
           -H "PRIVATE-TOKEN: ${{ secrets.GL_PAT }}" \
           -H "Content-Type: application/json" \
@@ -41,8 +43,8 @@ jobs:
           git clone https://oauth2:${{ secrets.GL_PAT }}@gitlab.com/gconsole001/$REPO_ID
           
           cd "$REPO_ID"
+          mv ../blob .
           
-          wget -nv "${{ github.event.inputs.dlUrl }}" -o blob
           
           git lfs track "blob"
           git add .gitattributes
