@@ -45,9 +45,9 @@ jobs:
           git push || true
           
           if [[ "$ID" == *":"* ]]; then
-            curl https://torrentio.strem.fun/qualityfilter=4k%7Csizefilter=20GB%7Cdebridoptions=nodownloadlinks,nocatalog%7Ctorbox=${{ secrets.TB_API_KEY }}/stream/series/$ID.json | jq '.streams[0].url' | xargs -L 1 wget -nv -O blob
+            curl https://torrentio.strem.fun/qualityfilter=4k%7Csizefilter=4GB%7Cdebridoptions=nodownloadlinks,nocatalog%7Ctorbox=${{ secrets.TB_API_KEY }}/stream/series/$ID.json | jq '.streams[0].url' | xargs -L 1 wget -nv -O blob
           else
-            curl https://torrentio.strem.fun/qualityfilter=4k%7Csizefilter=20GB%7Cdebridoptions=nodownloadlinks,nocatalog%7Ctorbox=${{ secrets.TB_API_KEY }}/stream/movie/$ID.json | jq '.streams[0].url' | xargs -L 1 wget -nv -O blob
+            curl https://torrentio.strem.fun/qualityfilter=4k%7Csizefilter=4GB%7Cdebridoptions=nodownloadlinks,nocatalog%7Ctorbox=${{ secrets.TB_API_KEY }}/stream/movie/$ID.json | jq '.streams[0].url' | xargs -L 1 wget -nv -O blob
           fi
           
           git lfs track "blob"
