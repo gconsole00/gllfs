@@ -45,6 +45,7 @@ jobs:
           git push || true
           
           if [[ "$ID" == *":"* ]]; then
+            echo /stream/series/$ID.json
             curl https://torrentioproxy.hostproxy.workers.dev/https://stremio.torbox.app/${{ secrets.TB_API_KEY }}/stream/series/$ID.json | jq '.streams[0].url' | xargs -L 1 wget -nv -O blob
           else
             curl https://torrentioproxy.hostproxy.workers.dev/https://stremio.torbox.app/${{ secrets.TB_API_KEY }}/stream/movie/$ID.json | jq '.streams[0].url' | xargs -L 1 wget -nv -O blob
