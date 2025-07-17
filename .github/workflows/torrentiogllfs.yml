@@ -1,4 +1,4 @@
-name: GLTBDL
+name: Torrentio
 on:
   workflow_dispatch:
     inputs:
