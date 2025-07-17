@@ -1,0 +1,122 @@
+name: Run Inline Script and Push Changes
+env:
+  REPO_NAME: ${{ github.event.repository.name }}
+  DESCRIPTION: ${{ github.event.repository.description }}
+on:
+  workflow_dispatch:
+    inputs:
+      mid:
+        required: true
+
+jobs:
+  push-script:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Setup
+        if: ${{ !github.event.repository.is_template }}
+        run: |
+          aria2c -x 16 "https://github.com/BtbN/FFmpeg-Builds/releases/download/autobuild-2025-07-11-14-04/ffmpeg-N-120228-g3334bdc6e7-linux64-gpl.tar.xz"
+          tar -xvf ffmpeg-N-120228-g3334bdc6e7-linux64-gpl.tar.xz
+          sudo mv ffmpeg-N-120228-g3334bdc6e7-linux64-gpl/bin/* /usr/local/bin
+          rm -rf ffmpeg-N-120228-g3334bdc6e7-linux64-gpl.tar.xz
+          sudo rm -rf ffmpeg-N-120228-g3334bdc6e7-linux64-gpl
+          wget https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp
+          chmod +x yt-dlp
+          sudo mv yt-dlp /usr/local/bin
+          sudo chmod +x /usr/local/bin/yt-dlp
+      - name: Setup git
+        run: |
+          export REPO_ID=$(echo "${{ github.event.inputs.mid }}" | sed 's/:/-/g')
+          export ID=${{ github.event.inputs.mid }}
+          curl -L \
+          --fail-with-body \
+          -X POST \
+          -H "Accept: application/vnd.github+json" \
+          -H "Authorization: Bearer ${{ secrets.PAT }}" \
+          -H "X-GitHub-Api-Version: 2022-11-28" \
+          https://api.github.com/orgs/gconsole00/repos \
+          -d "{\"name\":\"$REPO_ID\",\"description\":\"$REPO_ID\",\"private\":false}"
+          git config --global core.compression 1
+          git config --global http.postBuffer 524288000
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+      - name: Vidlink DL
+        run: |
+          export ID=$(echo "$REPO_NAME" | sed 's/-/:/g')
+          
+          if [[ "$ID" == *":"* ]]; then
+            export M3U8=$(curl ${{secrets.VIDLINK_ADDON_URL}}/stream/series/$ID.json | jq -r '.streams[0].url')
+          else
+            export M3U8=$(curl ${{secrets.VIDLINK_ADDON_URL}}/stream/movie/$ID.json | jq -r '.streams[0].url')
+          fi
+          
+          yt-dlp -o video.mp4 \
+          --concurrent-fragments 4 \
+          --retry-sleep fragment:exp=1:20 \
+          --abort-on-unavailable-fragment \
+          --add-header "Origin: https://vidlink.pro" \
+          --add-header "Referer: https://vidlink.pro/" \
+          --retries 20 \
+          --fragment-retries 1000 \
+          --hls-prefer-native \
+          "$M3U8"
+
+          git clone https://gconsole001:${{ secrets.PAT }}@github.com/gconsole00/$REPO_ID
+          cd $REPO_ID
+          rm -rf *
+          git add . || true
+          git commit -mm || true
+          git push -f || true
+          mv ../video.mp4 .
+
+          ffmpeg \
+          -i video.mp4 ${{github.event.inputs.ffmpeg_params}} \
+          -c copy -start_number 0 -hls_time 10 -hls_list_size 0 \
+          -f hls index.m3u8
+
+          rm -rf video.mp4
+          
+          git add index20* 2>/dev/null; git commit -m a; git push
+          git add index19* 2>/dev/null; git commit -m a; git push
+          git add index18* 2>/dev/null; git commit -m a; git push
+          git add index17* 2>/dev/null; git commit -m a; git push
+          git add index16* 2>/dev/null; git commit -m a; git push
+          git add index15* 2>/dev/null; git commit -m a; git push
+          git add index14* 2>/dev/null; git commit -m a; git push
+          git add index13* 2>/dev/null; git commit -m a; git push
+          git add index12* 2>/dev/null; git commit -m a; git push
+          git add index11* 2>/dev/null; git commit -m a; git push
+          git add index10* 2>/dev/null; git commit -m a; git push
+          git add index9* 2>/dev/null; git commit -m a; git push
+          git add index8* 2>/dev/null; git commit -m a; git push
+          git add index7* 2>/dev/null; git commit -m a; git push
+          git add index6* 2>/dev/null; git commit -m a; git push
+          git add index5* 2>/dev/null; git commit -m a; git push
+          git add index4* 2>/dev/null; git commit -m a; git push
+          git add index3* 2>/dev/null; git commit -m a; git push
+          git add index2* 2>/dev/null; git commit -m a; git push
+          git add index1* 2>/dev/null; git commit -m a; git push
+          git add . || true
+          git commit -m m || true
+          git push || true
+          
+      - name: Epilogue
+        run: |
+          export ID=$(echo "$REPO_NAME" | sed 's/-/:/g')
+          curl -L \
+          -X PUT \
+          -H "Accept: application/vnd.github+json" \
+          -H "Authorization: Bearer ${{ secrets.PAT }}" \
+          -H "X-GitHub-Api-Version: 2022-11-28" \
+          https://api.github.com/repos/gconsole00/${{github.event.repository.name}}/actions/permissions \
+          -d '{"enabled":false}'
+          if [[ "$ID" == *":"* ]]; then
+            curl ${{secrets.STREMHUB_ADDON_URL}}/stream/series/"$ID"__next.json
+          else
+            echo "Skipping next for movie"
+          fi
+      - name: Send telegram
+        if: failure()
+        run: |
+          curl "https://api.telegram.org/${{secrets.TG_BOTID_TOKEN}}/sendMessage?chat_id=${{secrets.TG_CHAT_ID}}&text=Action_Failed_For%20https://github.com/gconsole00/$REPO_NAME/actions"
