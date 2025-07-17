@@ -1,0 +1,63 @@
+name: GLTBDL
+on:
+  workflow_dispatch:
+    inputs:
+      mid:
+        required: true
+jobs:
+  push-script:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Setup
+        if: ${{ !github.event.repository.is_template }}
+        run: |
+          curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash
+      - name: Setup git
+        run: |
+          git config --global core.compression 1
+          git config --global http.postBuffer 524288000
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global lfs.activitytimeout 600
+          
+          
+      - name: TBDLGL
+        run: |
+          export REPO_ID=$(echo "${{ github.event.inputs.mid }}" | sed 's/:/-/g')
+          export ID=${{ github.event.inputs.mid }}
+          
+          curl --request POST \
+          -H "PRIVATE-TOKEN: ${{ secrets.GL_PAT }}" \
+          -H "Content-Type: application/json" \
+          --data "{\"name\": \"$REPO_ID\", \"visibility\": \"public\"}" \
+          --url "https://gitlab.com/api/v4/projects/"
+          
+          git clone https://oauth2:${{ secrets.GL_PAT }}@gitlab.com/gconsole001/$REPO_ID
+          cd "$REPO_ID"
+          rm -rf *
+          git add . || true
+          git commit -mm || true
+          git push || true
+          
+          if [[ "$ID" == *":"* ]]; then
+            curl https://torrentio.strem.fun/qualityfilter=4k%7Csizefilter=20GB%7Cdebridoptions=nodownloadlinks,nocatalog%7Ctorbox=${{ secrets.TB_API_KEY }}/stream/series/$ID.json | jq '.streams[0].url' | xargs -L 1 wget -nv -O blob
+          else
+            curl https://torrentio.strem.fun/qualityfilter=4k%7Csizefilter=20GB%7Cdebridoptions=nodownloadlinks,nocatalog%7Ctorbox=${{ secrets.TB_API_KEY }}/stream/movie/$ID.json | jq '.streams[0].url' | xargs -L 1 wget -nv -O blob
+          fi
+          
+          git lfs track "blob"
+          git add .gitattributes
+          git add blob
+          git commit -mm
+          export GIT_LFS_FORCE_PROGRESS=1
+          git push --progress
+          
+      - name: Send telegram
+        if: failure()
+        run: |
+          curl "https://api.telegram.org/${{secrets.TG_BOTID_TOKEN}}/sendMessage?chat_id=${{secrets.TG_CHAT_ID}}&text=Action_Failed_For%20https://github.com/gconsole00/$REPO_NAME/actions"
