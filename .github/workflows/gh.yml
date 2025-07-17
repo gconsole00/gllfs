@@ -49,7 +49,7 @@ jobs:
           --abort-on-unavailable-fragment \
           --add-header "Origin: https://vidlink.pro" \
           --add-header "Referer: https://vidlink.pro/" \
-          --retries 200 \
+          --retries 20 \
           --fragment-retries 100 \
           --hls-prefer-native \
           "$M3U8"
