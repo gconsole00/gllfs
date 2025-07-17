@@ -44,8 +44,8 @@ jobs:
           fi
           
           yt-dlp -o video.mp4 \
-          --concurrent-fragments 4 \
-          --retry-sleep fragment:exp=1:20 \
+          --concurrent-fragments 2 \
+          --retry-sleep fragment:exp=1:8 \
           --abort-on-unavailable-fragment \
           --add-header "Origin: https://vidlink.pro" \
           --add-header "Referer: https://vidlink.pro/" \
