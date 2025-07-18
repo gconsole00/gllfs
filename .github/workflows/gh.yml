@@ -79,6 +79,10 @@ jobs:
 
           rm -rf video.mp4
           
+          git add index.m3u8 || true
+          git commit -m m || true
+          git push || true
+          
           git add index20* 2>/dev/null; git commit -m a; git push
           git add index19* 2>/dev/null; git commit -m a; git push
           git add index18* 2>/dev/null; git commit -m a; git push
