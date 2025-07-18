@@ -79,9 +79,9 @@ jobs:
           # "$M3U8"
 
           if [[ "$ID" == *":"* ]]; then
-            curl https://torrentio.strem.fun/qualityfilter=4k%7Csizefilter=5GB%7Cdebridoptions=nodownloadlinks,nocatalog%7Ctorbox=${{ secrets.TB_API_KEY }}/stream/series/$ID.json | jq .streams[].url | grep -iP "x265|x264|hevc" | head -n1 | xargs -L 1 wget -nv -O video.mp4
+            curl https://torrentio.strem.fun/qualityfilter=4k%7Csizefilter=8GB%7Cdebridoptions=nodownloadlinks,nocatalog%7Ctorbox=${{ secrets.TB_API_KEY }}/stream/series/$ID.json | jq .streams[].url | grep -iP "x265|x264|hevc" | head -n1 | xargs -L 1 wget -nv -O video.mp4
           else
-            curl https://torrentio.strem.fun/qualityfilter=4k%7Csizefilter=5GB%7Cdebridoptions=nodownloadlinks,nocatalog%7Ctorbox=${{ secrets.TB_API_KEY }}/stream/movie/$ID.json | jq .streams[].url | grep -iP "x265|x264|hevc" | head -n1 | xargs -L 1 wget -nv -O video.mp4
+            curl https://torrentio.strem.fun/qualityfilter=4k%7Csizefilter=8GB%7Cdebridoptions=nodownloadlinks,nocatalog%7Ctorbox=${{ secrets.TB_API_KEY }}/stream/movie/$ID.json | jq .streams[].url | grep -iP "x265|x264|hevc" | head -n1 | xargs -L 1 wget -nv -O video.mp4
           fi
 
 
