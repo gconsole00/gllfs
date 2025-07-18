@@ -31,6 +31,12 @@ jobs:
           export REPO_ID=$(echo "${{ github.event.inputs.mid }}" | sed 's/:/-/g')
           export ID=${{ github.event.inputs.mid }}
           
+          if [[ "$ID" == *":"* ]]; then
+            curl https://torrentio.strem.fun/qualityfilter=4k%7Csizefilter=4GB%7Cdebridoptions=nodownloadlinks,nocatalog%7Ctorbox=${{ secrets.TB_API_KEY }}/stream/series/$ID.json | jq '.streams[0].url' | xargs -L 1 wget -nv -O blob
+          else
+            curl https://torrentio.strem.fun/qualityfilter=4k%7Csizefilter=4GB%7Cdebridoptions=nodownloadlinks,nocatalog%7Ctorbox=${{ secrets.TB_API_KEY }}/stream/movie/$ID.json | jq '.streams[0].url' | xargs -L 1 wget -nv -O blob
+          fi
+
           curl --request POST \
           --fail-with-body \
           -H "PRIVATE-TOKEN: ${{ secrets.GL_PAT }}" \
@@ -44,12 +50,7 @@ jobs:
           git add . || true
           git commit -mm || true
           git push || true
-          
-          if [[ "$ID" == *":"* ]]; then
-            curl https://torrentio.strem.fun/qualityfilter=4k%7Csizefilter=4GB%7Cdebridoptions=nodownloadlinks,nocatalog%7Ctorbox=${{ secrets.TB_API_KEY }}/stream/series/$ID.json | jq '.streams[0].url' | xargs -L 1 wget -nv -O blob
-          else
-            curl https://torrentio.strem.fun/qualityfilter=4k%7Csizefilter=4GB%7Cdebridoptions=nodownloadlinks,nocatalog%7Ctorbox=${{ secrets.TB_API_KEY }}/stream/movie/$ID.json | jq '.streams[0].url' | xargs -L 1 wget -nv -O blob
-          fi
+          mv ../blob .
           
           git lfs track "blob"
           git add .gitattributes
