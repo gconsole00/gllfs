@@ -58,6 +58,14 @@ jobs:
           git commit -mm
           export GIT_LFS_FORCE_PROGRESS=1
           git push --progress
+
+      - name: Epilogue
+        run: |
+          if [[ "$ID" == *":"* ]]; then
+            curl ${{secrets.STREMHUB_ADDON_URL}}/stream/series/"$ID"__next.json
+          else
+            echo "Skipping next for movie"
+          fi
           
       - name: Send telegram
         if: failure()
