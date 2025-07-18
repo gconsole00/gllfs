@@ -4,6 +4,11 @@ env:
 on:
   workflow_dispatch:
     inputs:
+      mask_log:
+        description: ''
+        required: true
+        default: 'true'
+        type: boolean    
       mid:
         required: true
 
@@ -12,6 +17,19 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
+      - name: Mask log
+        if: ${{ github.event.inputs.mask_log == 'true' }}
+        run: |
+          echo "::add-mask::1"
+          echo "::add-mask::2"
+          echo "::add-mask::3"
+          echo "::add-mask::4"
+          echo "::add-mask::5"
+          echo "::add-mask::6"
+          echo "::add-mask::7"
+          echo "::add-mask::8"
+          echo "::add-mask::9"
+          echo "::add-mask::0"    
       - name: Setup
         if: ${{ !github.event.repository.is_template }}
         run: |
