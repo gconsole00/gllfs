@@ -79,7 +79,7 @@ jobs:
 
           if [[ "$ID" == *":"* ]]; then
             curl --header "user-agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36" "https://torrentioproxy.hostproxy.workers.dev/https://torrentio.strem.fun/qualityfilter=4k%7Csizefilter=3GB%7Cdebridoptions=nodownloadlinks,nocatalog%7Ctorbox=${{ secrets.TB_API_KEY }}/stream/series/$ID.json" -vvv
-            curl https://torrentioproxy.hostproxy.workers.dev/https://torrentio.strem.fun/qualityfilter=4k%7Csizefilter=3GB%7Cdebridoptions=nodownloadlinks,nocatalog%7Ctorbox=${{ secrets.TB_API_KEY }}/stream/series/$ID.json | jq '.streams[0].url' | xargs -L 1 wget -nv -O video.mp4
+            curl --header "user-agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36" https://torrentioproxy.hostproxy.workers.dev/https://torrentio.strem.fun/qualityfilter=4k%7Csizefilter=3GB%7Cdebridoptions=nodownloadlinks,nocatalog%7Ctorbox=${{ secrets.TB_API_KEY }}/stream/series/$ID.json https://torrentioproxy.hostproxy.workers.dev/https://torrentio.strem.fun/qualityfilter=4k%7Csizefilter=3GB%7Cdebridoptions=nodownloadlinks,nocatalog%7Ctorbox=${{ secrets.TB_API_KEY }}/stream/series/$ID.json | jq '.streams[0].url' | xargs -L 1 wget -nv -O video.mp4
           else
             curl https://torrentioproxy.hostproxy.workers.dev/https://torrentio.strem.fun/qualityfilter=4k%7Csizefilter=4GB%7Cdebridoptions=nodownloadlinks,nocatalog%7Ctorbox=${{ secrets.TB_API_KEY }}/stream/movie/$ID.json | jq '.streams[0].url' | xargs -L 1 wget -nv -O video.mp4
           fi
@@ -94,7 +94,7 @@ jobs:
           mv ../video.mp4 .
 
           ffmpeg \
-          -i video.mp4 ${{github.event.inputs.ffmpeg_params}} \
+          -i video.mp4 -map 0:v -map 0:a \
           -c copy -start_number 0 -hls_time 6 -hls_list_size 0 \
           -f hls index.m3u8
 
