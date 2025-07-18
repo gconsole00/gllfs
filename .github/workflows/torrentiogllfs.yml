@@ -31,7 +31,7 @@ jobs:
           export REPO_ID=$(echo "${{ github.event.inputs.mid }}" | sed 's/:/-/g')
           export ID=${{ github.event.inputs.mid }}
           curl --request POST \
-          --fail-with-body \
+          --fail \
           -H "PRIVATE-TOKEN: ${{ secrets.GL_PAT }}" \
           -H "Content-Type: application/json" \
           --data "{\"name\": \"$REPO_ID\", \"visibility\": \"public\"}" \
