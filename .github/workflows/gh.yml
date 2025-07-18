@@ -1,4 +1,4 @@
-name: "${{ github.event.inputs.mid }} Run Inline Script and Push Changes"
+name: "Run Inline Script and Push Changes"
 env:
   DESCRIPTION: ${{ github.event.repository.description }}
 on:
