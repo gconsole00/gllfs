@@ -38,7 +38,7 @@ jobs:
           export ID=${{ github.event.inputs.mid }}
           
           curl -L \
-          --fail-with-body \
+          --fail \
           -X POST \
           -H "Accept: application/vnd.github+json" \
           -H "Authorization: Bearer ${{ secrets.PAT }}" \
