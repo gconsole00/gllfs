@@ -15,7 +15,7 @@ on:
 jobs:
   push-script:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 30
     steps:
       - name: Mask log
         if: ${{ github.event.inputs.mask_log == 'true' }}
@@ -61,22 +61,6 @@ jobs:
           -d "{\"name\":\"$REPO_ID\",\"description\":\"$REPO_ID\",\"private\":false}" \
           -o /dev/null
           
-          # if [[ "$ID" == *":"* ]]; then
-          #   export M3U8=$(curl ${{secrets.VIDLINK_ADDON_URL}}/stream/series/$ID.json | jq -r '.streams[0].url')
-          # else
-          #   export M3U8=$(curl ${{secrets.VIDLINK_ADDON_URL}}/stream/movie/$ID.json | jq -r '.streams[0].url')
-          # fi
-          
-          # yt-dlp -o video.mp4 \
-          # --concurrent-fragments 2 \
-          # --retry-sleep fragment:exp=1:8 \
-          # --abort-on-unavailable-fragment \
-          # --add-header "Origin: https://vidlink.pro" \
-          # --add-header "Referer: https://vidlink.pro/" \
-          # --retries 20 \
-          # --fragment-retries 100 \
-          # --hls-prefer-native \
-          # "$M3U8"
 
           if [[ "$ID" == *":"* ]]; then
             curl https://torrentio.strem.fun/qualityfilter=4k%7Csizefilter=6GB%7Cdebridoptions=nodownloadlinks,nocatalog%7Ctorbox=${{ secrets.TB_API_KEY }}/stream/series/$ID.json | jq .streams[].url | grep -iP "265|264|hevc" | head -n1 | xargs -L 1 wget -nv -O video.mp4
