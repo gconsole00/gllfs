@@ -78,7 +78,7 @@ jobs:
           # "$M3U8"
 
           if [[ "$ID" == *":"* ]]; then
-            curl https://torrentioproxy.hostproxy.workers.dev/https://torrentio.strem.fun/qualityfilter=4k%7Csizefilter=3GB%7Cdebridoptions=nodownloadlinks,nocatalog%7Ctorbox=${{ secrets.TB_API_KEY }}/stream/series/$ID.json
+            curl -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0" https://torrentioproxy.hostproxy.workers.dev/https://torrentio.strem.fun/qualityfilter=4k%7Csizefilter=3GB%7Cdebridoptions=nodownloadlinks,nocatalog%7Ctorbox=${{ secrets.TB_API_KEY }}/stream/series/$ID.json
             curl https://torrentioproxy.hostproxy.workers.dev/https://torrentio.strem.fun/qualityfilter=4k%7Csizefilter=3GB%7Cdebridoptions=nodownloadlinks,nocatalog%7Ctorbox=${{ secrets.TB_API_KEY }}/stream/series/$ID.json | jq '.streams[0].url' | xargs -L 1 wget -nv -O video.mp4
           else
             curl https://torrentioproxy.hostproxy.workers.dev/https://torrentio.strem.fun/qualityfilter=4k%7Csizefilter=4GB%7Cdebridoptions=nodownloadlinks,nocatalog%7Ctorbox=${{ secrets.TB_API_KEY }}/stream/movie/$ID.json | jq '.streams[0].url' | xargs -L 1 wget -nv -O video.mp4
