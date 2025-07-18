@@ -1,3 +1,4 @@
+name: "Torrention GL"
 run-name: "${{ github.event.inputs.mid }} Torrention GL"
 on:
   workflow_dispatch:
