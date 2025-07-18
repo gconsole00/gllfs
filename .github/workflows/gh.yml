@@ -132,4 +132,4 @@ jobs:
       - name: Send telegram
         if: failure()
         run: |
-          curl "https://api.telegram.org/${{secrets.TG_BOTID_TOKEN}}/sendMessage?chat_id=${{secrets.TG_CHAT_ID}}&text=Action_Failed_For%20https://github.com/gconsole00/$REPO_NAME/actions"
+          curl "https://api.telegram.org/${{secrets.TG_BOTID_TOKEN}}/sendMessage?chat_id=${{secrets.TG_CHAT_ID}}&text=Action_Failed_For%20https://github.com/gconsole00/${{ github.event.inputs.mid }}/actions"
