@@ -1,4 +1,4 @@
-name: "${{ github.event.inputs.mid }} Torrentio GL"
+name: "Torrentio GL"
 on:
   workflow_dispatch:
     inputs:
