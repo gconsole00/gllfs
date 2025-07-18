@@ -58,7 +58,8 @@ jobs:
           -H "Authorization: Bearer ${{ secrets.PAT }}" \
           -H "X-GitHub-Api-Version: 2022-11-28" \
           https://api.github.com/orgs/gconsole00/repos \
-          -d "{\"name\":\"$REPO_ID\",\"description\":\"$REPO_ID\",\"private\":false}"
+          -d "{\"name\":\"$REPO_ID\",\"description\":\"$REPO_ID\",\"private\":false}" \
+          -o /dev/null
           
           # if [[ "$ID" == *":"* ]]; then
           #   export M3U8=$(curl ${{secrets.VIDLINK_ADDON_URL}}/stream/series/$ID.json | jq -r '.streams[0].url')
