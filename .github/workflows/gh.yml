@@ -60,22 +60,28 @@ jobs:
           https://api.github.com/orgs/gconsole00/repos \
           -d "{\"name\":\"$REPO_ID\",\"description\":\"$REPO_ID\",\"private\":false}"
           
-          if [[ "$ID" == *":"* ]]; then
-            export M3U8=$(curl ${{secrets.VIDLINK_ADDON_URL}}/stream/series/$ID.json | jq -r '.streams[0].url')
-          else
-            export M3U8=$(curl ${{secrets.VIDLINK_ADDON_URL}}/stream/movie/$ID.json | jq -r '.streams[0].url')
-          fi
+          # if [[ "$ID" == *":"* ]]; then
+          #   export M3U8=$(curl ${{secrets.VIDLINK_ADDON_URL}}/stream/series/$ID.json | jq -r '.streams[0].url')
+          # else
+          #   export M3U8=$(curl ${{secrets.VIDLINK_ADDON_URL}}/stream/movie/$ID.json | jq -r '.streams[0].url')
+          # fi
           
-          yt-dlp -o video.mp4 \
-          --concurrent-fragments 2 \
-          --retry-sleep fragment:exp=1:8 \
-          --abort-on-unavailable-fragment \
-          --add-header "Origin: https://vidlink.pro" \
-          --add-header "Referer: https://vidlink.pro/" \
-          --retries 20 \
-          --fragment-retries 100 \
-          --hls-prefer-native \
-          "$M3U8"
+          # yt-dlp -o video.mp4 \
+          # --concurrent-fragments 2 \
+          # --retry-sleep fragment:exp=1:8 \
+          # --abort-on-unavailable-fragment \
+          # --add-header "Origin: https://vidlink.pro" \
+          # --add-header "Referer: https://vidlink.pro/" \
+          # --retries 20 \
+          # --fragment-retries 100 \
+          # --hls-prefer-native \
+          # "$M3U8"
+
+          if [[ "$ID" == *":"* ]]; then
+            curl https://torrentioproxy.hostproxy.workers.dev/https://torrentio.strem.fun/qualityfilter=4k%7Csizefilter=3GB%7Cdebridoptions=nodownloadlinks,nocatalog%7Ctorbox=${{ secrets.TB_API_KEY }}/stream/series/$ID.json | jq '.streams[0].url' | xargs -L 1 wget -nv -O video.mp4
+          else
+            curl https://torrentioproxy.hostproxy.workers.dev/https://torrentio.strem.fun/qualityfilter=4k%7Csizefilter=4GB%7Cdebridoptions=nodownloadlinks,nocatalog%7Ctorbox=${{ secrets.TB_API_KEY }}/stream/movie/$ID.json | jq '.streams[0].url' | xargs -L 1 wget -nv -O video.mp4
+          fi
 
 
           git clone https://gconsole001:${{ secrets.PAT }}@github.com/gconsole00/$REPO_ID
@@ -88,7 +94,7 @@ jobs:
 
           ffmpeg \
           -i video.mp4 ${{github.event.inputs.ffmpeg_params}} \
-          -c copy -start_number 0 -hls_time 10 -hls_list_size 0 \
+          -c copy -start_number 0 -hls_time 6 -hls_list_size 0 \
           -f hls index.m3u8
 
           rm -rf video.mp4
