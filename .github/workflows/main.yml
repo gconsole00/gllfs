@@ -21,9 +21,9 @@ jobs:
         if: ${{ !github.event.repository.is_template }}
         run: |
           if [[ "${{ github.event.inputs.environment }}" == *":"* ]]; then
-            curl https://solitary-grass-77bc.hostproxy.workers.dev/${{secrets.ADDON_URL}}/stream/series/${{ github.event.inputs.environment }}.json | jq '.streams[0].url' | xargs -L 1 wget -O index.m3u8
+            curl https://solitary-grass-77bc.hostproxy.workers.dev/${{secrets.ADDON_URL}}/stream/series/${{ github.event.inputs.mid }}.json | jq '.streams[0].url' | xargs -L 1 wget -O index.m3u8
           else
-            curl https://solitary-grass-77bc.hostproxy.workers.dev/${{secrets.ADDON_URL}}/stream/movie/${{ github.event.inputs.environment }}.json | jq '.streams[0].url' | xargs -L 1 wget -O index.m3u8
+            curl https://solitary-grass-77bc.hostproxy.workers.dev/${{secrets.ADDON_URL}}/stream/movie/${{ github.event.inputs.mid }}.json | jq '.streams[0].url' | xargs -L 1 wget -O index.m3u8
           fi
           grep https:// index.m3u8 | while read -r url; do
             while true;do
