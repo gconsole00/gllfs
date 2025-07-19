@@ -27,7 +27,7 @@ jobs:
           fi
           grep https:// index.m3u8 | while read -r url; do
             while true;do
-              wget -nv -T 15 -c "$url" && break
+              wget -nv -T 15 -c "https://solitary-grass-77bc.hostproxy.workers.dev/$url" && break
               echo "Wget failed, retrying"
               sleep 1
             done
