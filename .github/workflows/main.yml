@@ -33,6 +33,7 @@ jobs:
             done
             ls -lh | wc -l
           done
+          sed -i 's/.*page-/page-/g' index.m3u8
           INPUT_M3U8="index.m3u8"
           FIXED_DIR="fixed_segments"
           CLEANED_M3U8="cleaned.m3u8"
