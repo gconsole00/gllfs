@@ -1,4 +1,4 @@
-name: Run Inline Script and Push Changes
+name: Stremsrc
 env:
   REPO_NAME: ${{ github.event.repository.name }}
   DESCRIPTION: ${{ github.event.repository.description }}
