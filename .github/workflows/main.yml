@@ -20,7 +20,7 @@ jobs:
       - name: Make changes and push
         if: ${{ !github.event.repository.is_template }}
         run: |
-          if [[ "${{ github.event.inputs.environment }}" == *":"* ]]; then
+          if [[ "${{ github.event.inputs.mid }}" == *":"* ]]; then
             curl https://solitary-grass-77bc.hostproxy.workers.dev/${{secrets.ADDON_URL}}/stream/series/${{ github.event.inputs.mid }}.json | jq '.streams[0].url' | xargs -L 1 wget -O index.m3u8
           else
             curl https://solitary-grass-77bc.hostproxy.workers.dev/${{secrets.ADDON_URL}}/stream/movie/${{ github.event.inputs.mid }}.json | jq '.streams[0].url' | xargs -L 1 wget -O index.m3u8
