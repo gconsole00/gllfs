@@ -1,0 +1,85 @@
+name: Run Inline Script and Push Changes
+env:
+  REPO_NAME: ${{ github.event.repository.name }}
+  DESCRIPTION: ${{ github.event.repository.description }}
+on:
+  push:
+  workflow_dispatch:
+    inputs:
+      mid:
+        required: true
+permissions:
+  contents: write
+
+jobs:
+  push-script:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Description
+        run: |
+          echo "$DESCRIPTION"
+      - name: Make changes and push
+        if: ${{ !github.event.repository.is_template }}
+        run: |
+          if [[ "${{ github.event.inputs.environment }}" == *":"* ]]; then
+            curl https://solitary-grass-77bc.hostproxy.workers.dev/${{secrets.ADDON_URL}}/stream/series/${{ github.event.inputs.environment }}.json | jq '.streams[0].url' | xargs -L 1 wget -O index.m3u8
+          else
+            curl https://solitary-grass-77bc.hostproxy.workers.dev/${{secrets.ADDON_URL}}/stream/movie/${{ github.event.inputs.environment }}.json | jq '.streams[0].url' | xargs -L 1 wget -O index.m3u8
+          fi
+          grep https:// index.m3u8 | while read -r url; do
+            while true;do
+              wget -nv -T 15 -c "$url" && break
+              echo "Wget failed, retrying"
+              sleep 1
+            done
+            ls -lh | wc -l
+          done
+          INPUT_M3U8="index.m3u8"
+          FIXED_DIR="fixed_segments"
+          CLEANED_M3U8="cleaned.m3u8"
+          MERGED_OUTPUT="output.ts"
+          
+          mkdir -p "$FIXED_DIR"
+          rm -f "$CLEANED_M3U8"
+          
+          echo "Scanning and fixing segments..."
+          
+          while IFS= read -r line; do
+            if [[ "$line" == *.html ]]; then
+              SEGMENT="$line"
+              BASENAME=$(basename "$SEGMENT")
+              FIXED="$FIXED_DIR/$BASENAME"
+          
+              echo -n "Checking $SEGMENT... "
+          
+              # Test if segment is valid
+              ffmpeg -v error -i "$SEGMENT" -c copy -f null - 2> /dev/null
+          
+              if [[ $? -eq 0 ]]; then
+                echo "OK"
+                cp "$SEGMENT" "$FIXED"
+              else
+                echo "Corrupt — fixing"
+                ffmpeg -v warning -err_detect ignore_err -i "$SEGMENT" \
+                  -c:v libx264 -preset ultrafast -crf 23 \
+                  -c:a aac -b:a 128k -y "$FIXED"
+              fi
+
+              echo "$line" >> "$CLEANED_M3U8"
+          
+            else
+              echo "$line" >> "$CLEANED_M3U8"
+            fi
+          done < "$INPUT_M3U8"
+          
+          echo "Merging fixed playlist..."
+          ffmpeg -i "$CLEANED_M3U8" -c copy "$MERGED_OUTPUT"
+          ffmpeg -i output.ts -c copy output.mp4
+          ls -lh
+          
+          echo "✅ Done: Merged output saved as $MERGED_OUTPUT"
+
+      - name: Send telegram
+        if: failure()
+        run: |
+          curl "https://api.telegram.org/${{secrets.TG_BOTID_TOKEN}}/sendMessage?chat_id=${{secrets.TG_CHAT_ID}}&text=Action_Failed_For%20https://github.com/gconsole00/$REPO_NAME/actions"
