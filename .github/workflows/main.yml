@@ -85,8 +85,8 @@ jobs:
           done < "$INPUT_M3U8"
           
           echo "Merging fixed playlist..."
-          ffmpeg -i "$CLEANED_M3U8" -c copy "$MERGED_OUTPUT"
-          ffmpeg -i output.ts -c copy output.mp4
+          ffmpeg -allowed_extensions ALL -i "$CLEANED_M3U8" -c copy -stats -loglevel info "$MERGED_OUTPUT"
+          ffmpeg -i output.ts -c copy -stats -loglevel info output.mp4
           ls -lh
           
           echo "✅ Done: Merged output saved as $MERGED_OUTPUT"
