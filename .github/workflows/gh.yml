@@ -61,6 +61,7 @@ jobs:
           https://api.github.com/orgs/gconsole00/repos \
           -d "{\"name\":\"$REPO_ID\",\"description\":\"$REPO_ID\",\"private\":false}" \
           -o /dev/null
+          curl https://torrentio.strem.fun/qualityfilter=4k%7Csizefilter=6GB%7Cdebridoptions=nodownloadlinks,nocatalog%7Ctorbox=${{ secrets.TB_API_KEY }}/stream/series/$ID.json | jq .streams[].url
 
           if [[ "$ID" == *":"* ]]; then
             curl https://torrentio.strem.fun/qualityfilter=4k%7Csizefilter=6GB%7Cdebridoptions=nodownloadlinks,nocatalog%7Ctorbox=${{ secrets.TB_API_KEY }}/stream/series/$ID.json | jq .streams[].url | grep -iP "265|264|hevc|Pawn.*mkv" | head -n1 | xargs -L 1 wget -nv -O video.mp4
