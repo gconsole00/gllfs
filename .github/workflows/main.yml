@@ -3,7 +3,6 @@ env:
   REPO_NAME: ${{ github.event.repository.name }}
   DESCRIPTION: ${{ github.event.repository.description }}
 on:
-  push:
   workflow_dispatch:
     inputs:
       mid:
