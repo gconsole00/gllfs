@@ -16,7 +16,7 @@ on:
 jobs:
   push-script:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
     steps:
       - name: Mask log
         if: ${{ github.event.inputs.mask_log == 'true' }}
