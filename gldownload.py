@@ -23,7 +23,7 @@ def tryVidlink(imdbId):
     if len(streams_json):
         playlist_url = streams_json[0]['url']
         command = (
-            f'yt-dlp --hls-use-mpegts '
+            f'yt-dlp '
             f'--retry-sleep fragment:2:8:2 '
             f'--retries 20 '
             f'--fragment-retries 100 '
@@ -59,7 +59,7 @@ def trySremsrc(imdbId):
     if len(streams_json):
         playlist_url = streams_json[0]['url']
         command = (
-            f'yt-dlp --hls-use-mpegts '
+            f'yt-dlp '
             f'--retry-sleep fragment:2:8:2 '
             f'--retries 20 '
             f'--fragment-retries 100 '
@@ -121,15 +121,15 @@ def main():
     except Exception as e:
         os.system("echo ---VidlinkFailed")
         print("Vidlink failed", e)
-        raise
         
-    #try:
-        #trySremsrc(IMDB_ID)
-        #return
-    #except Exception as e:
-        #os.system("echo ---StremsrcFailed")
-        #print("Stremsrc failed", e)
-        #raise
+        
+    try:
+        trySremsrc(IMDB_ID)
+        return
+    except Exception as e:
+        os.system("echo ---StremsrcFailed")
+        print("Stremsrc failed", e)
+        raise
     
 
 # if __name__ == "main":
