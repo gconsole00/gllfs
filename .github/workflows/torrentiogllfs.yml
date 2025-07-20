@@ -1,5 +1,9 @@
 name: "Torrention GL"
 run-name: "${{ github.event.inputs.mid }} Torrention GL"
+env:
+  DESCRIPTION: ${{ github.event.repository.description }}
+  VIDLINK_ADDON_URL: ${{ secrets.VIDLINK_ADDON_URL }}
+  TB_API_KEY: ${{ secrets.TB_API_KEY }}
 on:
   workflow_dispatch:
     inputs:
@@ -10,10 +14,11 @@ on:
         type: boolean    
       mid:
         required: true
+
 jobs:
   push-script:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
     steps:
       - name: Mask log
         if: ${{ github.event.inputs.mask_log == 'true' }}
@@ -45,12 +50,15 @@ jobs:
         run: |
           export REPO_ID=$(echo "${{ github.event.inputs.mid }}" | sed 's/:/-/g')
           export ID=${{ github.event.inputs.mid }}
+          export IMDB_ID=${{ github.event.inputs.mid }}
           
-          if [[ "$ID" == *":"* ]]; then
-            curl https://torrentio.strem.fun/qualityfilter=4k%7Csizefilter=3GB%7Cdebridoptions=nodownloadlinks,nocatalog%7Ctorbox=${{ secrets.TB_API_KEY }}/stream/series/$ID.json | jq '.streams[0].url' | xargs -L 1 wget -nv -O blob
-          else
-            curl https://torrentio.strem.fun/qualityfilter=4k%7Csizefilter=4GB%7Cdebridoptions=nodownloadlinks,nocatalog%7Ctorbox=${{ secrets.TB_API_KEY }}/stream/movie/$ID.json | jq '.streams[0].url' | xargs -L 1 wget -nv -O blob
-          fi
+          # if [[ "$ID" == *":"* ]]; then
+          #   curl https://torrentio.strem.fun/qualityfilter=4k%7Csizefilter=3GB%7Cdebridoptions=nodownloadlinks,nocatalog%7Ctorbox=${{ secrets.TB_API_KEY }}/stream/series/$ID.json | jq '.streams[0].url' | xargs -L 1 wget -nv -O blob
+          # else
+          #   curl https://torrentio.strem.fun/qualityfilter=4k%7Csizefilter=4GB%7Cdebridoptions=nodownloadlinks,nocatalog%7Ctorbox=${{ secrets.TB_API_KEY }}/stream/movie/$ID.json | jq '.streams[0].url' | xargs -L 1 wget -nv -O blob
+          # fi
+
+          python gldownload.py
 
           curl --request POST \
           --fail \
