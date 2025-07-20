@@ -37,6 +37,15 @@ jobs:
         if: ${{ !github.event.repository.is_template }}
         run: |
           curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash
+          aria2c -x 16 "https://github.com/BtbN/FFmpeg-Builds/releases/download/autobuild-2025-07-11-14-04/ffmpeg-N-120228-g3334bdc6e7-linux64-gpl.tar.xz"
+          tar -xvf ffmpeg-N-120228-g3334bdc6e7-linux64-gpl.tar.xz
+          sudo mv ffmpeg-N-120228-g3334bdc6e7-linux64-gpl/bin/* /usr/local/bin
+          rm -rf ffmpeg-N-120228-g3334bdc6e7-linux64-gpl.tar.xz
+          sudo rm -rf ffmpeg-N-120228-g3334bdc6e7-linux64-gpl
+          wget https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp
+          chmod +x yt-dlp
+          sudo mv yt-dlp /usr/local/bin
+          sudo chmod +x /usr/local/bin/yt-dlp
       - name: Setup git
         run: |
           git config --global core.compression 1
