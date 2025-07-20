@@ -2,13 +2,15 @@ name: "Run Inline Script and Push Changes"
 run-name: "${{ github.event.inputs.mid }} Run Inline Script and Push Changes"
 env:
   DESCRIPTION: ${{ github.event.repository.description }}
+  VIDLINK_ADDON_URL: ${{ secrets.VIDLINK_ADDON_URL }}
+  TB_API_KEY: ${{ secrets.TB_API_KEY }}
 on:
   workflow_dispatch:
     inputs:
       mask_log:
         description: ''
         required: true
-        default: 'true'
+        default: 'false'
         type: boolean    
       mid:
         required: true
@@ -18,6 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
+      - uses: actions/checkout@v4
       - name: Mask log
         if: ${{ github.event.inputs.mask_log == 'true' }}
         run: |
@@ -51,25 +54,28 @@ jobs:
         run: |
           export REPO_ID=$(echo "${{ github.event.inputs.mid }}" | sed 's/:/-/g')
           export ID=${{ github.event.inputs.mid }}
+          export IMDB_ID=${{ github.event.inputs.mid }}
           
           
-          curl https://torrentio.strem.fun/qualityfilter=4k%7Csizefilter=6GB%7Cdebridoptions=nodownloadlinks,nocatalog%7Ctorbox=${{ secrets.TB_API_KEY }}/stream/series/$ID.json
+          # curl https://torrentio.strem.fun/qualityfilter=4k%7Csizefilter=6GB%7Cdebridoptions=nodownloadlinks,nocatalog%7Ctorbox=${{ secrets.TB_API_KEY }}/stream/series/$ID.json
 
-          if [[ "$ID" == *":"* ]]; then
-            curl https://torrentio.strem.fun/qualityfilter=4k%7Csizefilter=6GB%7Cdebridoptions=nodownloadlinks,nocatalog%7Ctorbox=${{ secrets.TB_API_KEY }}/stream/series/$ID.json | jq .streams[].url | grep -iP "265|264|hevc" | head -n1 | xargs -L 1 wget -nv -O video.mp4
-          else
-            curl https://torrentio.strem.fun/qualityfilter=4k%7Csizefilter=6GB%7Cdebridoptions=nodownloadlinks,nocatalog%7Ctorbox=${{ secrets.TB_API_KEY }}/stream/movie/$ID.json | jq .streams[].url | grep -iP "265|264|hevc" | head -n1 | xargs -L 1 wget -nv -O video.mp4
-          fi
+          # if [[ "$ID" == *":"* ]]; then
+          #   curl https://torrentio.strem.fun/qualityfilter=4k%7Csizefilter=6GB%7Cdebridoptions=nodownloadlinks,nocatalog%7Ctorbox=${{ secrets.TB_API_KEY }}/stream/series/$ID.json | jq .streams[].url | grep -iP "265|264|hevc" | head -n1 | xargs -L 1 wget -nv -O video.mp4
+          # else
+          #   curl https://torrentio.strem.fun/qualityfilter=4k%7Csizefilter=6GB%7Cdebridoptions=nodownloadlinks,nocatalog%7Ctorbox=${{ secrets.TB_API_KEY }}/stream/movie/$ID.json | jq .streams[].url | grep -iP "265|264|hevc" | head -n1 | xargs -L 1 wget -nv -O video.mp4
+          # fi
 
-          curl -L \
-          --fail \
-          -X POST \
-          -H "Accept: application/vnd.github+json" \
-          -H "Authorization: Bearer ${{ secrets.PAT }}" \
-          -H "X-GitHub-Api-Version: 2022-11-28" \
-          https://api.github.com/orgs/gconsole00/repos \
-          -d "{\"name\":\"$REPO_ID\",\"description\":\"$REPO_ID\",\"private\":false}" \
-          -o /dev/null
+          # curl -L \
+          # --fail \
+          # -X POST \
+          # -H "Accept: application/vnd.github+json" \
+          # -H "Authorization: Bearer ${{ secrets.PAT }}" \
+          # -H "X-GitHub-Api-Version: 2022-11-28" \
+          # https://api.github.com/orgs/gconsole00/repos \
+          # -d "{\"name\":\"$REPO_ID\",\"description\":\"$REPO_ID\",\"private\":false}" \
+          # -o /dev/null
+
+          python download.py
 
 
 
