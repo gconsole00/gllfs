@@ -121,14 +121,15 @@ def main():
     except Exception as e:
         os.system("echo ---VidlinkFailed")
         print("Vidlink failed", e)
-        
-    try:
-        trySremsrc(IMDB_ID)
-        return
-    except Exception as e:
-        os.system("echo ---StremsrcFailed")
-        print("Stremsrc failed", e)
         raise
+        
+    #try:
+        #trySremsrc(IMDB_ID)
+        #return
+    #except Exception as e:
+        #os.system("echo ---StremsrcFailed")
+        #print("Stremsrc failed", e)
+        #raise
     
 
 # if __name__ == "main":
