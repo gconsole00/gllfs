@@ -67,7 +67,7 @@ def trySremsrc(imdbId):
             f'--add-header "Origin: https://cloudnestra.com" '
             f'--concurrent-fragments 8 '
             f'--abort-on-unavailable-fragment '
-            f'-o video.mp4 "https://solitary-grass-77bc.hostproxy.workers.dev/{playlist_url}"'
+            f'-o video.mp4 "{playlist_url}"'
         )
         output = os.system(
             command,
