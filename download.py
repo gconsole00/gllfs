@@ -60,6 +60,8 @@ def trySremsrc(imdbId):
         playlist_url = streams_json[0]['url']
         command = (
             f'yt-dlp '
+            f'--file-access-retries 100 '
+            f'--extractor-retries 100 '
             f'--retry-sleep fragment:1:2:1 '
             f'--retries 20 '
             f'--fragment-retries 100 '
