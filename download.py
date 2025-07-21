@@ -60,7 +60,7 @@ def trySremsrc(imdbId):
         playlist_url = streams_json[0]['url']
         command = (
             f'yt-dlp '
-            f'--retry-sleep fragment:1:2:1'
+            f'--retry-sleep fragment:1:2:1 '
             f'--retries 20 '
             f'--fragment-retries 100 '
             f'--add-header "Referer: https://cloudnestra.com/" '
