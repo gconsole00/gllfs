@@ -118,7 +118,8 @@ def main():
         os.system('echo 1---TorrentioFailed')
         print("Torrentio failed", e)
         
-    try: 
+    try:
+        os.system('rm -rf video.mp4')
         tryVidlink(IMDB_ID)
         return
     except Exception as e:
@@ -126,6 +127,7 @@ def main():
         print("Vidlink failed", e)
         
     try:
+        os.system('rm -rf video.mp4')
         trySremsrc(IMDB_ID)
         return
     except Exception as e:
