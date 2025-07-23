@@ -71,12 +71,12 @@ def trySremsrc(imdbId):
             f'--abort-on-unavailable-fragment '
             f'-o video.mp4 "{playlist_url}"'
         )
-        output = os.system(
-            command,
-        )
-        if output != 0:
-            raise Exception
-        return
+        for i in range(2):
+            output = os.system(
+                command,
+            )
+            if output == 0:
+                return
     raise Exception
 
 def tryTorrentio(imdbId):
