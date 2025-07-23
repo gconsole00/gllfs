@@ -118,12 +118,6 @@ def main():
         os.system('echo ---TorrentioFailed')
         print("Torrentio failed", e)
         
-    try: 
-        tryVidlink(IMDB_ID)
-        return
-    except Exception as e:
-        os.system("echo ---VidlinkFailed")
-        print("Vidlink failed", e)
         
         
     try:
@@ -132,6 +126,13 @@ def main():
     except Exception as e:
         os.system("echo ---StremsrcFailed")
         print("Stremsrc failed", e)
+        
+    try: 
+        tryVidlink(IMDB_ID)
+        return
+    except Exception as e:
+        os.system("echo ---VidlinkFailed")
+        print("Vidlink failed", e)
         raise
     
 
