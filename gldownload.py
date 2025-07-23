@@ -77,6 +77,7 @@ def trySremsrc(imdbId):
             )
             if output == 0:
                 return
+            os.system("rm -rf *")
             print('Failed, retrying')
     raise Exception
 
