@@ -77,6 +77,7 @@ def trySremsrc(imdbId):
             )
             if output == 0:
                 return
+            print('Failed, retrying')
     raise Exception
 
 def tryTorrentio(imdbId):
