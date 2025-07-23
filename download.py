@@ -121,19 +121,19 @@ def main():
         
     try:
         os.system('rm -rf video.mp4')
-        tryVidlink(IMDB_ID)
-        return
-    except Exception as e:
-        os.system("echo 3---VidlinkFailed")
-        print("Vidlink failed", e)
-        
-    try:
-        os.system('rm -rf video.mp4')
         trySremsrc(IMDB_ID)
         return
     except Exception as e:
         os.system("echo 2---StremsrcFailed")
         print("Stremsrc failed", e)
+        
+    try:
+        os.system('rm -rf video.mp4')
+        tryVidlink(IMDB_ID)
+        return
+    except Exception as e:
+        os.system("echo 3---VidlinkFailed")
+        print("Vidlink failed", e)
         raise
     
 
