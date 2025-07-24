@@ -73,7 +73,7 @@ jobs:
           --fail \
           -H "PRIVATE-TOKEN: ${{ secrets.GL_PAT }}" \
           -H "Content-Type: application/json" \
-          --data "{\"name\": \"$REPO_ID\", \"visibility\": \"public\"}" \
+          --data "{\"name\": \"$REPO_ID\", \"visibility\": \"private\"}" \
           --url "https://gitlab.com/api/v4/projects/"
           
           
