@@ -102,7 +102,7 @@ def tryTorrentio(imdbId):
     streams_json = streams.json()['streams']
     for stream in streams_json:
         url = stream['url']
-        if "264" in url or "265" in url or "hevc" in url:
+        if "264" in url or "265" in url or "hevc" in url.lower():
             command = """
                 aria2c --allow-overwrite=true -x16 -j16 {} -o video.mp4
             """.format(url)
