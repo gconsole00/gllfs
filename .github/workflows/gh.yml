@@ -34,7 +34,7 @@ jobs:
         if: ${{ !github.event.repository.is_template }}
         run: |
           aria2c -x 16 "https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linux64-gpl.tar.xz"
-          tar -xvf ffmpeg-master-latest-linux64-gpl
+          tar -xvf ffmpeg-master-latest-linux64-gpl.tar.xz
           sudo mv ffmpeg-master-latest-linux64-gpl/bin/* /usr/local/bin
           rm -rf ffmpeg-master-latest-linux64-gpl.tar.xz
           sudo rm -rf ffmpeg-master-latest-linux64-gpl
