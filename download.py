@@ -21,7 +21,7 @@ def tryVidlink(imdbId):
     streams = requests.get(stream_url)
     streams_json = streams.json()['streams']
     if len(streams_json):
-        playlist_url = streams_json[0]['url'].replace('(','\(').replace(')','\)')
+        playlist_url = streams_json[0]['url']
         command = (
             f'yt-dlp '
             f'--retry-sleep fragment:2:8:2 '
@@ -101,7 +101,7 @@ def tryTorrentio(imdbId):
     )
     streams_json = streams.json()['streams']
     for stream in streams_json:
-        url = stream['url']
+        url = stream['url'].replace('(','\(').replace(')','\)')
         if "264" in url or "265" in url or "hevc" in url.lower():
             command = """
                 aria2c --allow-overwrite=true -x16 -j16 {} -o video.mp4
