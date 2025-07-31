@@ -21,7 +21,7 @@ def tryVidlink(imdbId):
     streams = requests.get(stream_url)
     streams_json = streams.json()['streams']
     if len(streams_json):
-        playlist_url = streams_json[0]['url']
+        playlist_url = streams_json[0]['url'].replace('(','\(').replace(')','\)')
         command = (
             f'yt-dlp '
             f'--retry-sleep fragment:2:8:2 '
