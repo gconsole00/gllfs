@@ -101,7 +101,7 @@ def tryTorrentio(imdbId):
     )
     streams_json = streams.json()['streams']
     for stream in streams_json:
-        url = stream['url'].replace('(','').replace(')','')
+        url = stream['url']
         print(stream_url)
         print(url)
         command = """
