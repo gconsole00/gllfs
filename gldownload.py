@@ -101,12 +101,11 @@ def tryTorrentio(imdbId):
     )
     streams_json = streams.json()['streams']
     for stream in streams_json:
-        url = stream['url']
-        print(stream_url)
-        print(url)
+        url = stream['url'].replace('(','').replace(')','')
         command = """
             aria2c --allow-overwrite=true -x16 -j16 {} -o blob
         """.format(url)
+        print(command)
         output = os.system(command)
         if output != 0:
             raise Exception
