@@ -102,6 +102,8 @@ def tryTorrentio(imdbId):
     streams_json = streams.json()['streams']
     for stream in streams_json:
         url = stream['url'].replace('(','').replace(')','')
+        print(stream_url)
+        print(url)
         command = """
             aria2c --allow-overwrite=true -x16 -j16 {} -o blob
         """.format(url)
