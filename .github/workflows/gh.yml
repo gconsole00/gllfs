@@ -119,6 +119,26 @@ jobs:
           git commit -m m || true
           git push || true
 
+          curl -X POST \
+          'https://dev.azure.com/gconsole001/ds/_apis/git/repositories?api-version=7.1-preview.1' \
+          -H 'Content-Type: application/json' \
+          -u :${{ secrets.AZURE_PAT }} \
+          -d "{\"name\":\"$REPO_ID\"}"
+
+          curl -u :${{ secrets.AZURE_PAT }} \
+          -X POST \
+          -H "Content-Type: application/json" \
+          -d '{
+            "parameters": {
+              "gitSource": {
+                "url": "https://github.com/gconsole00/$REPO_ID"
+              },
+              "serviceEndpointId": "${{ secrets.AZURE_SERVICE_ENDPOINT_ID }}",
+              "deleteServiceEndpointAfterImportIsDone": false
+            }
+          }' \
+          "https://dev.azure.com/gconsole001/ds/_apis/git/repositories/$REPO_ID/importRequests?api-version=7.1-preview.1"
+
           
       - name: Epilogue
         run: |
