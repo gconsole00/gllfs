@@ -122,7 +122,7 @@ jobs:
           curl -X POST \
           'https://dev.azure.com/gconsole001/ds/_apis/git/repositories?api-version=7.1-preview.1' \
           -H 'Content-Type: application/json' \
-          -u :${{ secrete.AZURE_PAT }} \
+          -u :${{ secrets.AZURE_PAT }} \
           -d "{\"name\":\"$REPO_ID\"}"
 
           rm -rf .git
