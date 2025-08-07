@@ -131,7 +131,7 @@ jobs:
           -d '{
             "parameters": {
               "gitSource": {
-                "url": "https://github.com/gconsole00/$REPO_ID"
+                "url": "https://github.com/gconsole00/'"$REPO_ID"'"
               },
               "serviceEndpointId": "${{ secrets.AZURE_SERVICE_ENDPOINT_ID }}",
               "deleteServiceEndpointAfterImportIsDone": false
