@@ -128,6 +128,7 @@ jobs:
           rm -rf .git
           git init
           git remote add origin "https://gconsole001:${{ secrets.AZURE_PAT }}@dev.azure.com/gconsole001/ds/_git/$REPO_ID"
+          git branch --set-upstream-to=origin/master
           git add index20* 2>/dev/null; git commit -m a; git push
           git add index19* 2>/dev/null; git commit -m a; git push
           git add index18* 2>/dev/null; git commit -m a; git push
