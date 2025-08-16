@@ -58,7 +58,7 @@ jobs:
           export ID=${{ github.event.inputs.mid }}
           export IMDB_ID=${{ github.event.inputs.mid }}
 
-          aria2c -x16 -j16 "{{ github.event.inputs.url }}" -o video.mp4
+          aria2c -x16 -j16 "${{ github.event.inputs.url }}" -o video.mp4
 
           curl -L \
           --fail \
