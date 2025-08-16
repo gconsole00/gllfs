@@ -1,4 +1,4 @@
-import os
+import os, shlex
 import requests
 
 VIDLINK_ADDON_URL = os.environ['VIDLINK_ADDON_URL']
@@ -105,7 +105,7 @@ def tryTorrentio(imdbId):
         if "264" in url or "265" in url or "hevc" in url.lower():
             command = """
                 aria2c --allow-overwrite=true -x16 -j16 {} -o video.mp4
-            """.format(url)
+            """.format(shlex.quote(url))
             output = os.system(command)
             if output != 0:
                 raise Exception
