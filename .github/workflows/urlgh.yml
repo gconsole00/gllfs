@@ -1,0 +1,145 @@
+name: "Download url"
+run-name: "${{ github.event.inputs.mid }} Run Inline Script and Push Changes"
+env:
+  DESCRIPTION: ${{ github.event.repository.description }}
+  VIDLINK_ADDON_URL: ${{ secrets.VIDLINK_ADDON_URL }}
+  TB_API_KEY: ${{ secrets.TB_API_KEY }}
+on:
+  workflow_dispatch:
+    inputs:
+      mask_log:
+        description: ''
+        required: true
+        default: 'true'
+        type: boolean    
+      mid:
+        required: true
+      url:
+        required: true
+
+jobs:
+  push-script:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Mask log
+        if: ${{ github.event.inputs.mask_log == 'true' }}
+        run: |
+          echo "::add-mask::a"
+          echo "::add-mask::b"
+          echo "::add-mask::c"
+          echo "::add-mask::d"
+          echo "::add-mask::e"
+          echo "::add-mask::f"      
+      - name: Setup
+        if: ${{ !github.event.repository.is_template }}
+        run: |
+          aria2c -x 16 "https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linux64-gpl.tar.xz"
+          tar -xvf ffmpeg-master-latest-linux64-gpl.tar.xz
+          sudo mv ffmpeg-master-latest-linux64-gpl/bin/* /usr/local/bin
+          rm -rf ffmpeg-master-latest-linux64-gpl.tar.xz
+          sudo rm -rf ffmpeg-master-latest-linux64-gpl
+          wget https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp
+          chmod +x yt-dlp
+          sudo mv yt-dlp /usr/local/bin
+          sudo chmod +x /usr/local/bin/yt-dlp
+      - name: Setup git
+        run: |
+          export REPO_ID=$(echo "${{ github.event.inputs.mid }}" | sed 's/:/-/g')
+          export ID=${{ github.event.inputs.mid }}
+          git config --global core.compression 1
+          git config --global http.postBuffer 524288000
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+      - name: Vidlink DL
+        run: |
+          export REPO_ID=$(echo "${{ github.event.inputs.mid }}" | sed 's/:/-/g')
+          export ID=${{ github.event.inputs.mid }}
+          export IMDB_ID=${{ github.event.inputs.mid }}
+
+          aria2c -x16 -j16 "{{ github.event.inputs.url }}" -o video.mp4
+
+          curl -L \
+          --fail \
+          -X POST \
+          -H "Accept: application/vnd.github+json" \
+          -H "Authorization: Bearer ${{ secrets.PAT }}" \
+          -H "X-GitHub-Api-Version: 2022-11-28" \
+          https://api.github.com/orgs/gconsole00/repos \
+          -d "{\"name\":\"$REPO_ID\",\"description\":\"$REPO_ID\",\"private\":true}" \
+          -o /dev/null
+
+
+          git clone https://gconsole001:${{ secrets.PAT }}@github.com/gconsole00/$REPO_ID
+          cd $REPO_ID
+          rm -rf *
+          git add . || true
+          git commit -mm || true
+          git push -f || true
+          mv ../video.mp4 .
+
+          ffmpeg \
+          -i video.mp4 -map 0:v -map 0:a \
+          -c copy -start_number 0 -hls_time 6 -hls_list_size 0 \
+          -f hls index.m3u8
+
+          rm -rf video.mp4
+
+          git add index20* 2>/dev/null; git commit -m a; git push
+          git add index19* 2>/dev/null; git commit -m a; git push
+          git add index18* 2>/dev/null; git commit -m a; git push
+          git add index17* 2>/dev/null; git commit -m a; git push
+          git add index16* 2>/dev/null; git commit -m a; git push
+          git add index15* 2>/dev/null; git commit -m a; git push
+          git add index14* 2>/dev/null; git commit -m a; git push
+          git add index13* 2>/dev/null; git commit -m a; git push
+          git add index12* 2>/dev/null; git commit -m a; git push
+          git add index11* 2>/dev/null; git commit -m a; git push
+          git add index10* 2>/dev/null; git commit -m a; git push
+          git add index9* 2>/dev/null; git commit -m a; git push
+          git add index8* 2>/dev/null; git commit -m a; git push
+          git add index7* 2>/dev/null; git commit -m a; git push
+          git add index6* 2>/dev/null; git commit -m a; git push
+          git add index5* 2>/dev/null; git commit -m a; git push
+          git add index4* 2>/dev/null; git commit -m a; git push
+          git add index3* 2>/dev/null; git commit -m a; git push
+          git add index2* 2>/dev/null; git commit -m a; git push
+          git add index1* 2>/dev/null; git commit -m a; git push
+          git add . || true
+          git commit -m m || true
+          git push || true
+
+          curl -X POST \
+          'https://dev.azure.com/gconsole001/ds/_apis/git/repositories?api-version=7.1-preview.1' \
+          -H 'Content-Type: application/json' \
+          -u :${{ secrets.AZURE_PAT }} \
+          -d "{\"name\":\"$REPO_ID\"}"
+
+          curl -u :${{ secrets.AZURE_PAT }} \
+          -X POST \
+          -H "Content-Type: application/json" \
+          -d '{
+            "parameters": {
+              "gitSource": {
+                "url": "https://github.com/gconsole00/'"$REPO_ID"'"
+              },
+              "serviceEndpointId": "${{ secrets.AZURE_SERVICE_ENDPOINT_ID }}",
+              "deleteServiceEndpointAfterImportIsDone": false
+            }
+          }' \
+          "https://dev.azure.com/gconsole001/ds/_apis/git/repositories/$REPO_ID/importRequests?api-version=7.1-preview.1"
+
+          
+      - name: Epilogue
+        run: |
+          export ID=${{ github.event.inputs.mid }}
+          if [[ "$ID" == *":"* ]]; then
+            curl ${{secrets.STREMHUB_ADDON_URL}}/stream/series/"$ID"__nextgh.json
+          else
+            echo "Skipping next for movie"
+          fi
+      - name: Send telegram
+        if: failure()
+        run: |
+          curl "https://api.telegram.org/${{secrets.TG_BOTID_TOKEN}}/sendMessage?chat_id=${{secrets.TG_CHAT_ID}}&text=GH_Action_Failed_For%20${{ github.event.inputs.mid }}%20https://github.com/gconsole00/gllfs/actions/runs/${{github.run_id}}"
