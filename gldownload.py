@@ -1,4 +1,4 @@
-import os
+import os, shlex
 import requests
 
 VIDLINK_ADDON_URL = os.environ['VIDLINK_ADDON_URL']
@@ -104,7 +104,7 @@ def tryTorrentio(imdbId):
         url = stream['url']
         command = """
             aria2c --allow-overwrite=true -x16 -j16 {} -o blob
-        """.format(url)
+        """.format(shlex.quote(url))
         print(command)
         output = os.system(command)
         if output != 0:
