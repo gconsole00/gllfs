@@ -4,7 +4,6 @@ env:
   DESCRIPTION: ${{ github.event.repository.description }}
   VIDLINK_ADDON_URL: ${{ secrets.VIDLINK_ADDON_URL }}
   TB_API_KEY: ${{ secrets.TB_API_KEY }}
-  GH_TOKEN: ${{ secrets.RELEASE_GH_TOKEN }}
 on:
   workflow_dispatch:
     inputs:
@@ -51,10 +50,6 @@ jobs:
           git config --global http.postBuffer 524288000
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          wget https://github.com/cli/cli/releases/download/v2.60.1/gh_2.76.2_linux_amd64.tar.gz
-          tar xvf gh_2.76.2_linux_amd64.tar.gz
-          sudo mv gh_2.76.2_linux_amd64/bin/gh /usr/local/bin/
-
       - name: Vidlink DL
         run: |
           export REPO_ID=$(echo "${{ github.event.inputs.mid }}" | sed 's/:/-/g')
@@ -86,7 +81,7 @@ jobs:
           -c copy -start_number 0 -hls_time 6 -hls_list_size 0 \
           -f hls index.m3u8
 
-          mv video.mp4 ..
+          rm -rf video.mp4
 
           git add index20* 2>/dev/null; git commit -m a; git push
           git add index19* 2>/dev/null; git commit -m a; git push
@@ -112,7 +107,6 @@ jobs:
           git commit -m m || true
           git push || true
 
-
           curl -X POST \
           'https://dev.azure.com/gconsole001/ds/_apis/git/repositories?api-version=7.1-preview.1' \
           -H 'Content-Type: application/json' \
@@ -133,20 +127,6 @@ jobs:
           }' \
           "https://dev.azure.com/gconsole001/ds/_apis/git/repositories/$REPO_ID/importRequests?api-version=7.1-preview.1"
 
-
-          rm -rf *
-          mv ../video.mp4 .
-          size=$(stat -c%s "video.mp4")
-          
-          split -b 2000000000 -da 1 video.mp4 "blob-$size-"
-          
-          gh release create v1 \
-          --repo "gconsole00/$REPO_ID" \
-          --title "NA" \
-          --notes "NA"
-          
-          gh release upload v1 blob-* \
-          --repo "gconsole00/$REPO_ID"
           
       - name: Epilogue
         run: |
