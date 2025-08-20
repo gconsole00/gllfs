@@ -52,8 +52,8 @@ jobs:
           
           gh release create "${{ github.event.inputs.file_name }}" \
           --repo "gconsole00/releases" \
-          --title "NA" \
-          --notes "NA"
+          --title "${{ github.event.inputs.file_name }}" \
+          --notes "${{ github.event.inputs.file_name }}"
           
           gh release upload "${{ github.event.inputs.file_name }}" blob-* \
           --repo "gconsole00/releases"
