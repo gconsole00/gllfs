@@ -1,5 +1,5 @@
 name: "GH Release"
-run-name: "${{ github.event.inputs.mid }} GH Release"
+run-name: "${{ github.event.inputs.file_name }} GH Release"
 env:
   GH_TOKEN: ${{ secrets.RELEASE_GH_TOKEN }}
   TB_API_KEY: ${{ secrets.TB_API_KEY }}
