@@ -50,6 +50,10 @@ jobs:
           
           split -b 2000000000 -da 1 blob "blob-"
           
+          gh release delete ${{ github.event.inputs.file_name }} \
+          --repo "gconsole00/releases" \
+          --cleanup-tag -y || true
+          
           gh release create "${{ github.event.inputs.file_name }}" \
           --repo "gconsole00/releases" \
           --title "${{ github.event.inputs.file_name }}" \
