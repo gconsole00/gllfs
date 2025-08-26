@@ -52,7 +52,7 @@ jobs:
           
           gh release delete ${{ github.event.inputs.file_name }} \
           --repo "gconsole00/releases" \
-          --cleanup-tag -y || true
+           -y || true
           
           gh release create "${{ github.event.inputs.file_name }}" \
           --repo "gconsole00/releases" \
