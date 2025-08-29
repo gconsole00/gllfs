@@ -48,7 +48,7 @@ jobs:
 
           aria2c -x16 -j16 "${{ github.event.inputs.dl_url }}" -o blob
           
-          split -b 2000000000 -da 1 blob "blob-"
+          split -b 2000000000 -da 2 blob "blob-"
           
           gh release delete ${{ github.event.inputs.file_name }} \
           --repo "gconsole00/releases" \
