@@ -1,0 +1,72 @@
+name: "Dis Upload"
+run-name: "${{ github.event.inputs.file_name }} Dis Upload"
+env:
+  GH_TOKEN: ${{ secrets.RELEASE_GH_TOKEN }}
+  TB_API_KEY: ${{ secrets.TB_API_KEY }}
+  DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+on:
+  workflow_dispatch:
+    inputs:
+      mask_log:
+        description: ''
+        required: true
+        default: 'true'
+        type: boolean    
+      dl_url:
+        required: true
+      file_name:
+        required: true
+
+jobs:
+  push-script:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Mask log
+        if: ${{ github.event.inputs.mask_log == 'true' }}
+        run: |
+          echo "::add-mask::a"
+          echo "::add-mask::b"
+          echo "::add-mask::c"
+          echo "::add-mask::d"
+          echo "::add-mask::e"
+          echo "::add-mask::f"      
+      - name: Setup git
+        run: |
+          export REPO_ID=$(echo "${{ github.event.inputs.mid }}" | sed 's/:/-/g')
+          export ID=${{ github.event.inputs.mid }}
+          git config --global core.compression 1
+          git config --global http.postBuffer 524288000
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          wget https://github.com/cli/cli/releases/download/v2.76.2/gh_2.76.2_linux_amd64.tar.gz
+          tar xvf gh_2.76.2_linux_amd64.tar.gz
+          sudo mv gh_2.76.2_linux_amd64/bin/gh /usr/local/bin/
+
+      - name: Vidlink DL
+        run: |
+
+          aria2c -x16 -j16 "${{ github.event.inputs.dl_url }}" -o blob
+          
+          split -b 10000000 -da 5 blob "blob-"
+          rm -rf blob
+
+          python dis.py
+          
+          gh release delete ${{ github.event.inputs.file_name }} \
+          --repo "gconsole00/discord" \
+           -y || true
+          
+          gh release create "${{ github.event.inputs.file_name }}" \
+          --repo "gconsole00/discord" \
+          --title "${{ github.event.inputs.file_name }}" \
+          --notes "${{ github.event.inputs.file_name }}"
+          
+          gh release upload "${{ github.event.inputs.file_name }}" file_meta.json \
+          --repo "gconsole00/discord"
+          
+      - name: Send telegram
+        if: failure()
+        run: |
+          curl "https://api.telegram.org/${{secrets.TG_BOTID_TOKEN}}/sendMessage?chat_id=${{secrets.TG_CHAT_ID}}&text=GH_Action_Failed_For%20${{ github.event.inputs.mid }}%20https://github.com/gconsole00/gllfs/actions/runs/${{github.run_id}}"
