@@ -36,6 +36,7 @@ jobs:
         run: |
           export REPO_ID=$(echo "${{ github.event.inputs.mid }}" | sed 's/:/-/g')
           export ID=${{ github.event.inputs.mid }}
+          export FILE_NAME=${{ github.event.inputs.file_name }}
           git config --global core.compression 1
           git config --global http.postBuffer 524288000
           git config --global user.name "github-actions[bot]"
