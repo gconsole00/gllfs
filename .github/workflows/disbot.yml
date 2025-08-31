@@ -50,7 +50,6 @@ jobs:
           aria2c -x16 -j16 "${{ github.event.inputs.dl_url }}" -o blob
           
           split -b 10000000 -da 5 blob "blob-"
-          rm -rf blob
 
           python dis.py
           
