@@ -22,7 +22,7 @@ def getUrlDict(cache, files_arr):
     for i in range(20):
         try:
             files={
-                    f'file[{idx}]':open(files_arr[idx], 'rb') for idx in range(len(files_arr))
+                f'file[{idx}]':open(files_arr[idx], 'rb') for idx in range(len(files_arr))
             }
             files['content'] = (None, file_name or '')
             response = requests.post(
