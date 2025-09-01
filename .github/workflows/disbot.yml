@@ -5,6 +5,7 @@ env:
   TB_API_KEY: ${{ secrets.TB_API_KEY }}
   DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
   DISCORD_CHANNEL_ID: ${{ secrets.DISCORD_CHANNEL_ID }}
+  KV_TOKEN: ${{ secrets.KV_TOKEN }}
 on:
   workflow_dispatch:
     inputs:
@@ -54,18 +55,6 @@ jobs:
           split -b 10000000 -da 5 blob "blob-"
 
           python dis.py
-          
-          gh release delete ${{ github.event.inputs.file_name }} \
-          --repo "gconsole00/discord" \
-           -y || true
-          
-          gh release create "${{ github.event.inputs.file_name }}" \
-          --repo "gconsole00/discord" \
-          --title "${{ github.event.inputs.file_name }}" \
-          --notes "${{ github.event.inputs.file_name }}"
-          
-          gh release upload "${{ github.event.inputs.file_name }}" file_meta.json \
-          --repo "gconsole00/discord"
           
       - name: Send telegram
         if: failure()

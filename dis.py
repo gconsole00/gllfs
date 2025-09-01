@@ -11,6 +11,7 @@ channel_id = os.environ.get(
     'DISCORD_CHANNEL_ID'
 )
 file_name = os.environ.get('FILE_NAME')
+kv_token = os.environ.get('KV_TOKEN')
 headers = {
     'Authorization': f"Bot {bot_token}"
 }
@@ -61,8 +62,18 @@ def upload():
         'files': cache,
         'file_name':file_name
     }
-    with open(f'file_meta.json', 'w') as f:
-        json.dump(file_meta, f) 
+    headers = {
+        'Authorization': f'Bearer {kv_token}',
+        'Content-Type': 'application/x-www-form-urlencoded',
+    }
+
+    data = f'{"value":"{json.dumps(file_meta)}"}'
+
+    response = requests.post(
+        f'https://kv-waterfall-b86c.hostproxy.workers.dev/key/{file_name}',
+        headers=headers,
+        data=data,
+    )
     return cache
 
 cache = upload()
