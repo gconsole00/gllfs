@@ -30,6 +30,8 @@ def getUrlDict(cache, files_arr):
             headers=headers,
             files=files
         )
+        if response.status_code != 200:
+            print(response.status_code, response.text)
         if response.status_code < 300:
             mid = response.json()['id']
             break
