@@ -3,6 +3,7 @@ import threading
 import os
 import json
 from time import sleep
+from random import randint
 
 bot_token = os.environ.get(
     'DISCORD_BOT_TOKEN'
@@ -34,10 +35,10 @@ def getUrlDict(cache, files_arr):
                 break
             else:
                 print(response.status_code, 'sleeping')
-                sleep(10)
+                sleep(randint(1, 10))
         except Exception as e:
             print("Exception")
-            sleep(10)
+            sleep(randint(1, 10))
     if not mid:
         raise Exception
     for f in files_arr:
