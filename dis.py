@@ -73,9 +73,7 @@ def upload():
         headers=headers,
         json=data,
     )
-    if (response.status_code != 200){
-        print(response.status_code, response.text)
-    }
+    
     return cache
 
 cache = upload()
