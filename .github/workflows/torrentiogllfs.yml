@@ -99,6 +99,7 @@ jobs:
           git push --progress
 
           split -b 10000000 -da 5 blob "blob-"
+          cp ../dis.py .
           python dis.py
 
       - name: Epilogue
