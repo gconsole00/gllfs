@@ -7,6 +7,10 @@ from time import sleep
 bot_token = os.environ.get(
     'DISCORD_BOT_TOKEN'
 )
+channel_id = os.environ.get(
+    'DISCORD_CHANNEL_ID'
+)
+file_name = os.environ.get('FILE_NAME')
 headers = {
     'Authorization': f"Bot {bot_token}"
 }
@@ -18,8 +22,9 @@ def getUrlDict(cache, files_arr):
             files={
                     f'file[{idx}]':open(files_arr[idx], 'rb') for idx in range(len(files_arr))
             }
+            files['content'] = file_name or ''
             response = requests.post(
-                'https://discord.com/api/v10/channels/1409037091026763806/messages',
+                f'https://discord.com/api/v10/channels/{channel_id}/messages',
                 headers=headers,
                 files=files
             )
@@ -28,10 +33,10 @@ def getUrlDict(cache, files_arr):
                 break
             else:
                 print(response.status_code, 'sleeping')
-                sleep(1)
+                sleep(10)
         except Exception as e:
             print("Exception")
-            sleep(1)
+            sleep(10)
     if not mid:
         raise Exception
     for f in files_arr:
@@ -39,7 +44,6 @@ def getUrlDict(cache, files_arr):
     print('parts', len(cache))
 
 def upload():
-    file_name = os.environ.get('FILE_NAME')
     cache = {}
     threads = []
     files = [x for x in os.listdir() if 'blob-' in x]
