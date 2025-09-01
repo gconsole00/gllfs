@@ -19,7 +19,7 @@ headers = {
 
 def getUrlDict(cache, files_arr):
     mid = ''
-    while True:
+    for i in range(10):
         # try:
         files={
                 f'file[{idx}]':open(files_arr[idx], 'rb') for idx in range(len(files_arr))
