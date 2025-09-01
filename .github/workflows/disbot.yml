@@ -49,7 +49,7 @@ jobs:
 
       - name: Vidlink DL
         run: |
-
+          export FILE_NAME=${{ github.event.inputs.file_name }}
           aria2c -x16 -j16 "${{ github.event.inputs.dl_url }}" -o blob
           
           split -b 10000000 -da 5 blob "blob-"

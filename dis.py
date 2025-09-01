@@ -64,10 +64,9 @@ def upload():
     }
     headers = {
         'Authorization': f'Bearer {kv_token}',
-        'Content-Type': 'application/x-www-form-urlencoded',
     }
 
-    data = json.dumps({"value": file_meta})
+    data = {"value": file_meta}
 
     response = requests.post(
         f'https://kv-waterfall-b86c.hostproxy.workers.dev/key/{file_name}',
