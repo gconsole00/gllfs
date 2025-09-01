@@ -4,22 +4,29 @@ import os
 import json
 from time import sleep
 from random import randint
+import random
 
 bot_token = os.environ.get(
     'DISCORD_BOT_TOKEN'
+)
+bot_token_1 = os.environ.get(
+    'DISCORD_BOT_TOKEN_1'
 )
 channel_id = os.environ.get(
     'DISCORD_CHANNEL_ID'
 )
 file_name = os.environ.get('FILE_NAME')
 kv_token = os.environ.get('KV_TOKEN')
-headers = {
-    'Authorization': f"Bot {bot_token}"
-}
+bot_tokens = [bot_token]
+if bot_token_1:
+    bot_tokens.append(bot_token_1)
 
 def getUrlDict(cache, files_arr):
     mid = ''
     for i in range(20):
+        headers = {
+            'Authorization': f"Bot {random.choice(bot_tokens)}"
+        }
         try:
             files={
                 f'file[{idx}]':open(files_arr[idx], 'rb') for idx in range(len(files_arr))
