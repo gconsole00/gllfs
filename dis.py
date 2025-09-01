@@ -19,29 +19,29 @@ headers = {
 
 def getUrlDict(cache, files_arr):
     mid = ''
-    for i in range(10):
-        # try:
-        files={
-                f'file[{idx}]':open(files_arr[idx], 'rb') for idx in range(len(files_arr))
-        }
-        files['content'] = (None, file_name or '')
-        response = requests.post(
-            f'https://discord.com/api/v10/channels/{channel_id}/messages',
-            headers=headers,
-            files=files
-        )
-        if response.status_code != 200:
-            print(response.status_code, response.text)
-        if response.status_code < 300:
-            mid = response.json()['id']
-            break
-        else:
-            print(response.status_code, 'sleeping')
+    for i in range(20):
+        try:
+            files={
+                    f'file[{idx}]':open(files_arr[idx], 'rb') for idx in range(len(files_arr))
+            }
+            files['content'] = (None, file_name or '')
+            response = requests.post(
+                f'https://discord.com/api/v10/channels/{channel_id}/messages',
+                headers=headers,
+                files=files
+            )
+            if response.status_code != 200:
+                print(response.status_code)
+            if response.status_code < 300:
+                mid = response.json()['id']
+                break
+            else:
+                print(response.status_code, 'sleeping')
+                sleep(randint(1, 10))
+        except Exception as e:
+            raise
+            print("Exception")
             sleep(randint(1, 10))
-        # except Exception as e:
-        #     raise
-        #     print("Exception")
-        #     sleep(randint(1, 10))
     if not mid:
         raise Exception
     for f in files_arr:
@@ -61,6 +61,8 @@ def upload():
             threads = []
     [t.start() for t in threads]
     [t.join() for t in threads]
+    if len(cache) != len(files):
+        raise Exception("File count mismatch")
     file_meta = {
         'file_size': os.path.getsize('blob'),
         'files': cache,
