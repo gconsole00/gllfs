@@ -33,7 +33,13 @@ jobs:
           echo "::add-mask::c"
           echo "::add-mask::d"
           echo "::add-mask::e"
-          echo "::add-mask::f"      
+          echo "::add-mask::f"
+          echo "::add-mask::A"
+          echo "::add-mask::B"
+          echo "::add-mask::C"
+          echo "::add-mask::D"
+          echo "::add-mask::E"
+          echo "::add-mask::F"      
       - name: Setup git
         run: |
           git config --global core.compression 1
