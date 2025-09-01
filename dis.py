@@ -37,6 +37,7 @@ def getUrlDict(cache, files_arr):
                 print(response.status_code, 'sleeping')
                 sleep(randint(1, 10))
         except Exception as e:
+            raise
             print("Exception")
             sleep(randint(1, 10))
     if not mid:
