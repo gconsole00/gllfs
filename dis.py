@@ -71,7 +71,7 @@ def upload():
     response = requests.post(
         f'https://kv-waterfall-b86c.hostproxy.workers.dev/key/{file_name}',
         headers=headers,
-        data=data,
+        json=data,
     )
     return cache
 
