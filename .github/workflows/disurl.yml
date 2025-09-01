@@ -1,5 +1,5 @@
-name: "Dis Upload"
-run-name: "${{ github.event.inputs.file_name }} Dis Upload"
+name: "Dis URL"
+run-name: "${{ github.event.inputs.file_name }} Dis URL"
 env:
   GH_TOKEN: ${{ secrets.RELEASE_GH_TOKEN }}
   TB_API_KEY: ${{ secrets.TB_API_KEY }}
@@ -36,16 +36,10 @@ jobs:
           echo "::add-mask::f"      
       - name: Setup git
         run: |
-          export REPO_ID=$(echo "${{ github.event.inputs.mid }}" | sed 's/:/-/g')
-          export ID=${{ github.event.inputs.mid }}
-          export FILE_NAME=${{ github.event.inputs.file_name }}
           git config --global core.compression 1
           git config --global http.postBuffer 524288000
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          wget https://github.com/cli/cli/releases/download/v2.76.2/gh_2.76.2_linux_amd64.tar.gz
-          tar xvf gh_2.76.2_linux_amd64.tar.gz
-          sudo mv gh_2.76.2_linux_amd64/bin/gh /usr/local/bin/
 
       - name: Vidlink DL
         run: |
