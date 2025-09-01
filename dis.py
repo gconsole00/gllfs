@@ -23,7 +23,7 @@ def getUrlDict(cache, files_arr):
             files={
                     f'file[{idx}]':open(files_arr[idx], 'rb') for idx in range(len(files_arr))
             }
-            # files['content'] = file_name or ''
+            files['content'] = (None, file_name or '')
             response = requests.post(
                 f'https://discord.com/api/v10/channels/{channel_id}/messages',
                 headers=headers,
