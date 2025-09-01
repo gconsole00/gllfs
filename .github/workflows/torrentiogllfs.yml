@@ -64,6 +64,7 @@ jobs:
           git pull
           export REPO_ID=$(echo "${{ github.event.inputs.mid }}" | sed 's/:/-/g')
           export ID=${{ github.event.inputs.mid }}
+          export FILE_NAME=${{ github.event.inputs.mid }}
           export IMDB_ID=${{ github.event.inputs.mid }}
           
           # if [[ "$ID" == *":"* ]]; then
@@ -96,6 +97,8 @@ jobs:
           git commit -mm
           export GIT_LFS_FORCE_PROGRESS=1
           git push --progress
+
+          split -b 10000000 -da 5 blob "blob-"
           python dis.py
 
       - name: Epilogue
