@@ -18,25 +18,25 @@ headers = {
 def getUrlDict(cache, files_arr):
     mid = ''
     while True:
-        # try:
-        files={
-                f'file[{idx}]':open(files_arr[idx], 'rb') for idx in range(len(files_arr))
-        }
-        # files['content'] = file_name or ''
-        response = requests.post(
-            f'https://discord.com/api/v10/channels/{channel_id}/messages',
-            headers=headers,
-            files=files
-        )
-        if response.status_code < 300:
-            mid = response.json()['id']
-            break
-        else:
-            print(response.status_code, 'sleeping')
+        try:
+            files={
+                    f'file[{idx}]':open(files_arr[idx], 'rb') for idx in range(len(files_arr))
+            }
+            # files['content'] = file_name or ''
+            response = requests.post(
+                f'https://discord.com/api/v10/channels/{channel_id}/messages',
+                headers=headers,
+                files=files
+            )
+            if response.status_code < 300:
+                mid = response.json()['id']
+                break
+            else:
+                print(response.status_code, 'sleeping')
+                sleep(10)
+        except Exception as e:
+            print("Exception")
             sleep(10)
-        # except Exception as e:
-        #     print("Exception")
-        #     sleep(10)
     if not mid:
         raise Exception
     for f in files_arr:
