@@ -23,7 +23,7 @@ if bot_token_1:
 
 def getUrlDict(cache, files_arr):
     mid = ''
-    for i in range(20):
+    for i in range(40):
         headers = {
             'Authorization': f"Bot {random.choice(bot_tokens)}"
         }
@@ -37,8 +37,6 @@ def getUrlDict(cache, files_arr):
                 headers=headers,
                 files=files
             )
-            if response.status_code != 200:
-                print(response.status_code)
             if response.status_code < 300:
                 mid = response.json()['id']
                 break
@@ -69,6 +67,8 @@ def upload():
     [t.join() for t in threads]
     if len(cache) != len(files):
         raise Exception("File count mismatch")
+    else:
+        print("LENGTHS MATCH", len(cache), len(files))
     file_meta = {
         'file_size': os.path.getsize('blob'),
         'files': cache,
