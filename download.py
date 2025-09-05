@@ -87,7 +87,7 @@ def tryTorrentio(imdbId):
     base_url = f"https://stremaggregator.vercel.app/{STREMAGGREGATOR_KEY}/torrentio/stream/"
     if ":" in imdbId:
         stream_url = "{}/series/{}.json".format(
-            base_url
+            base_url,
             imdbId
         )
     else:
