@@ -5,6 +5,7 @@ env:
   TB_API_KEY: ${{ secrets.TB_API_KEY }}
   DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
   DISCORD_BOT_TOKEN_1: ${{ secrets.DISCORD_BOT_TOKEN_1 }}
+  DISCORD_BOT_TOKEN_2: ${{ secrets.DISCORD_BOT_TOKEN_2 }}
   DISCORD_CHANNEL_ID: ${{ secrets.DISCORD_CHANNEL_ID }}
   KV_TOKEN: ${{ secrets.KV_TOKEN }}
 on:
