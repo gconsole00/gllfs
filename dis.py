@@ -12,14 +12,22 @@ bot_token = os.environ.get(
 bot_token_1 = os.environ.get(
     'DISCORD_BOT_TOKEN_1'
 )
+bot_token_2 = os.environ.get(
+    'DISCORD_BOT_TOKEN_2'
+)
 channel_id = os.environ.get(
     'DISCORD_CHANNEL_ID'
 )
 file_name = os.environ.get('FILE_NAME')
 kv_token = os.environ.get('KV_TOKEN')
-bot_tokens = [bot_token]
-if bot_token_1:
-    bot_tokens.append(bot_token_1)
+
+bot_tokens = [
+    bot_token, 
+    bot_token_1, 
+    bot_token_2,
+]
+
+bot_tokens = [x for x in bot_tokens if x]
 
 def getUrlDict(cache, files_arr):
     mid = ''
@@ -85,6 +93,8 @@ def upload():
         headers=headers,
         json=data,
     )
+    if len(cache) < 6:
+        raise Exception
     
     return cache
 
