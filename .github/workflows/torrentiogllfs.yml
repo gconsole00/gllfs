@@ -9,6 +9,7 @@ env:
   DISCORD_BOT_TOKEN_1: ${{ secrets.DISCORD_BOT_TOKEN_1 }}
   DISCORD_CHANNEL_ID: ${{ secrets.DISCORD_CHANNEL_ID }}
   KV_TOKEN: ${{ secrets.KV_TOKEN }}
+  STREMAGGREGATOR_KEY: ${{ secrets.STREMAGGREGATOR_KEY }}
 on:
   workflow_dispatch:
     inputs:
