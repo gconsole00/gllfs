@@ -5,6 +5,8 @@ VIDLINK_ADDON_URL = os.environ['VIDLINK_ADDON_URL']
 STREMSRC_ADDON_URL = VIDLINK_ADDON_URL.replace('vidlink', 'stremsrc')
 TB_API_KEY = os.environ['TB_API_KEY']
 IMDB_ID = os.environ['IMDB_ID']
+STREMAGGREGATOR_KEY = os.environ['STREMAGGREGATOR_KEY']
+
 
 def tryVidlink(imdbId):
     stream_url = ""
