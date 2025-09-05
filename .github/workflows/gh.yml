@@ -4,6 +4,7 @@ env:
   DESCRIPTION: ${{ github.event.repository.description }}
   VIDLINK_ADDON_URL: ${{ secrets.VIDLINK_ADDON_URL }}
   TB_API_KEY: ${{ secrets.TB_API_KEY }}
+  STREMAGGREGATOR_KEY: ${{ secrets.STREMAGGREGATOR_KEY }}
 on:
   workflow_dispatch:
     inputs:
