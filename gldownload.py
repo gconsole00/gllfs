@@ -83,14 +83,15 @@ def trySremsrc(imdbId):
 
 def tryTorrentio(imdbId):
     stream_url = ""
+    base_url = f"https://stremaggregator.vercel.app/{STREMAGGREGATOR_KEY}/torrentio/stream/"
     if ":" in imdbId:
-        stream_url = "https://torrentio.strem.fun/qualityfilter=4k%7Csizefilter=4GB%7Cdebridoptions=nodownloadlinks,nocatalog%7Ctorbox={}/stream/series/{}.json".format(
-            TB_API_KEY,
+        stream_url = "{}/series/{}.json".format(
+            base_url
             imdbId
         )
     else:
-        stream_url = "https://torrentio.strem.fun/qualityfilter=4k%7Csizefilter=4GB%7Cdebridoptions=nodownloadlinks,nocatalog%7Ctorbox={}/stream/movie/{}.json".format(
-            TB_API_KEY,
+        stream_url = "{}/movie/{}.json".format(
+            base_url,
             imdbId
         )
     streams = requests.get(
