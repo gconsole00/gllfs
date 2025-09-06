@@ -83,123 +83,14 @@ def trySremsrc(imdbId):
 
 def tryTorrentio(imdbId):
     stream_url = ""
-    base_url = f"https://stremaggregator.vercel.app/{STREMAGGREGATOR_KEY}/torrentio/stream/"
     if ":" in imdbId:
-        stream_url = "{}/series/{}.json".format(
-            base_url
+        stream_url = "https://torrentio.strem.fun/qualityfilter=4k%7Csizefilter=4GB%7Cdebridoptions=nodownloadlinks,nocatalog%7Ctorbox={}/stream/series/{}.json".format(
+            TB_API_KEY,
             imdbId
         )
     else:
-        stream_url = "{}/movie/{}.json".format(
-            base_url,
-            imdbId
-        )
-    streams = requests.get(
-        stream_url,
-        headers={
-            "User-Agent": "Mozilla"
-        }
-    )
-    streams_json = streams.json()['streams']
-    for stream in streams_json:
-        url = stream['url']
-        command = """
-            aria2c --allow-overwrite=true -x16 -j16 {} -o blob
-        """.format(shlex.quote(url))
-        print(command)
-        output = os.system(command)
-        if output != 0:
-            raise Exception
-        return
-    raise Exception
-
-def main():
-    try:
-        tryTorrentio(IMDB_ID)
-        return
-    except Exception as e:
-        os.system('echo ---TorrentioFailed')
-        print("Torrentio failed", e)
-        
-        
-        
-    try:
-        trySremsrc(IMDB_ID)
-        return
-    except Exception as e:
-        os.system("echo ---StremsrcFailed")
-        print("Stremsrc failed", e)
-        
-    try: 
-        tryVidlink(IMDB_ID)
-        return
-    except Exception as e:
-        os.system("echo ---VidlinkFailed")
-        print("Vidlink failed", e)
-        raise
-    
-
-# if __name__ == "main":
-main()        )
-        output = os.system(
-            command,
-        )
-        if output != 0:
-            raise Exception
-        return
-    raise Exception("Error")
-
-
-def trySremsrc(imdbId):
-    stream_url = ""
-    if ":" in imdbId:
-        stream_url = "{}/stream/series/{}.json".format(
-            STREMSRC_ADDON_URL,
-            imdbId
-        )
-    else:
-        stream_url = "{}/stream/movie/{}.json".format(
-            STREMSRC_ADDON_URL,
-            imdbId
-        )
-    streams = requests.get(stream_url)
-    streams_json = streams.json()['streams']
-    if len(streams_json):
-        playlist_url = streams_json[0]['url']
-        command = (
-            f'yt-dlp '
-            f'--file-access-retries 100 '
-            f'--extractor-retries 100 '
-            f'--retry-sleep fragment:2:8:2 '
-            f'--retries 20 '
-            f'--fragment-retries 100 '
-            f'--add-header "Referer: https://cloudnestra.com/" '
-            f'--add-header "Origin: https://cloudnestra.com" '
-            f'--concurrent-fragments 8 '
-            f'--abort-on-unavailable-fragment '
-            f'-o blob "{playlist_url}"'
-        )
-        for i in range(2):
-            output = os.system(
-                command,
-            )
-            if output == 0:
-                return
-            os.system("rm -rf *")
-            print('Failed, retrying')
-    raise Exception
-
-def tryTorrentio(imdbId):
-    stream_url = ""
-    base_url = f"https://stremaggregator.vercel.app/{STREMAGGREGATOR_KEY}/torrentio/stream/"
-    if ":" in imdbId:
-        stream_url = "{}/series/{}.json".format(
-            base_url,
-            imdbId
-        )
-    else:
-        stream_url = "{}/movie/{}.json".format(
-            base_url,
+        stream_url = "https://torrentio.strem.fun/qualityfilter=4k%7Csizefilter=4GB%7Cdebridoptions=nodownloadlinks,nocatalog%7Ctorbox={}/stream/movie/{}.json".format(
+            TB_API_KEY,
             imdbId
         )
     streams = requests.get(
