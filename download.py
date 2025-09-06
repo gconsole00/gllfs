@@ -5,7 +5,6 @@ VIDLINK_ADDON_URL = os.environ['VIDLINK_ADDON_URL']
 STREMSRC_ADDON_URL = VIDLINK_ADDON_URL.replace('vidlink', 'stremsrc')
 TB_API_KEY = os.environ['TB_API_KEY']
 IMDB_ID = os.environ['IMDB_ID']
-STREMAGGREGATOR_KEY = os.environ['STREMAGGREGATOR_KEY']
 
 def tryVidlink(imdbId):
     stream_url = ""
@@ -84,15 +83,14 @@ def trySremsrc(imdbId):
 
 def tryTorrentio(imdbId):
     stream_url = ""
-    base_url = f"https://stremaggregator.vercel.app/{STREMAGGREGATOR_KEY}/torrentio/stream/"
     if ":" in imdbId:
-        stream_url = "{}/series/{}.json".format(
-            base_url,
+        stream_url = "https://torrentio.strem.fun/qualityfilter=4k%7Csizefilter=6GB%7Cdebridoptions=nodownloadlinks,nocatalog%7Ctorbox={}/stream/series/{}.json".format(
+            TB_API_KEY,
             imdbId
         )
     else:
-        stream_url = "{}/movie/{}.json".format(
-            base_url,
+        stream_url = "https://torrentio.strem.fun/qualityfilter=4k%7Csizefilter=6GB%7Cdebridoptions=nodownloadlinks,nocatalog%7Ctorbox={}/stream/movie/{}.json".format(
+            TB_API_KEY,
             imdbId
         )
     streams = requests.get(
