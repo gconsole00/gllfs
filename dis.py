@@ -63,7 +63,7 @@ def getUrlDict(cache, files_arr):
 def upload():
     cache = {}
     threads = []
-    files = [x for x in os.listdir() if 'blob-' in x]
+    files = sorted([x for x in os.listdir() if 'blob-' in x])
     for i in range(0, len(files), 10):
         t = threading.Thread(target=getUrlDict, args=(cache, files[i:i+10]))
         threads.append(t)
