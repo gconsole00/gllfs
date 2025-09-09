@@ -18,7 +18,7 @@ bot_token_2 = os.environ.get(
 channel_id = os.environ.get(
     'DISCORD_CHANNEL_ID'
 )
-file_name = os.environ.get('FILE_NAME')
+file_name = os.environ.get('FILE_NAME', '')
 file_name = file_name.replace(':', '-')
 kv_token = os.environ.get('KV_TOKEN')
 
