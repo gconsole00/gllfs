@@ -143,6 +143,6 @@ if __name__ == '__main__':
   )
   parser.add_argument('filename')
   args = parser.parse_args()
-  time.sleep(random.randint(1,10)
+  time.sleep(random.randint(1,10))
   uploader = AsanaUpload(args.filename)
   uploader.upload()
