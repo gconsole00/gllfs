@@ -1,5 +1,5 @@
-name: "Torrention GL"
-run-name: "${{ github.event.inputs.mid }} Torrention GL"
+name: "ASANA"
+run-name: "${{ github.event.inputs.mid }} ASANA"
 env:
   DESCRIPTION: ${{ github.event.repository.description }}
   VIDLINK_ADDON_URL: ${{ secrets.VIDLINK_ADDON_URL }}
