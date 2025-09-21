@@ -31,7 +31,7 @@ class AsanaUpload:
 
     json_data = {
       'data': {
-          'name': filename,
+          'name': filename.replace('tt', ''),
           'resource_subtype': 'default_task',
           'approval_status': 'approved',
           'completed': True,
@@ -116,10 +116,9 @@ class AsanaUpload:
         'authorization': f'Bearer {ASANA_PAT}',
     }
     files = {
-        'file': (f'{self.filename}_{chunkNumber}', data),
+        'file': (f'{self.filename}_{chunkNumber}'.replace('tt', ''), data),
         'parent': (None, f'{self.parent}'),
         'resource_subtype': (None, 'asana'),
-        'name': (None, f'{self.filename}_{chunkNumber}')
     }
     for i in range(3):
       print("Uploading", self.filename, chunkNumber)
