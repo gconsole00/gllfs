@@ -105,7 +105,7 @@ class AsanaUpload:
         json=data,
       )
       if response.ok:
-        return data
+        return response.text
     raise Exception("KV Write failed", response.status_code, response.text)
     
   
