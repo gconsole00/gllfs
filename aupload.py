@@ -88,7 +88,7 @@ class AsanaUpload:
         url,
       )
       if response.ok:
-        return data
+        return response.text
     return
 
   def kvWrite(self, key, value):
