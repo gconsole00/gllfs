@@ -50,6 +50,16 @@ class AsanaUpload:
     raise Exception("Error while creating parent", response.status_code, response.text)
     
   def upload(self):
+    kv_key = f"{KV_PREFIX}__{self.filename}"
+    if self.kvRead(kv_key):
+      print("ALREADY EXISTS", kv_key)
+      return
+    value = {
+        'file_size': self.filesize,
+        'files': self.assetIds,
+        'file_name':self.filename
+    }
+    self.kvWrite(kv_key, value)
     file = self.file
     self.parent = self.createParent(self.filename)
     with open(file, 'rb') as f:
@@ -68,6 +78,17 @@ class AsanaUpload:
         'file_name':self.filename
     }
     return self.kvWrite(kv_key, value)
+
+  def kvRead(self, key):
+    key = key.replace(':', '-')
+    url = f'{KV_BASE}/key/{key}'
+    for i in range(3):
+      response = requests.get(
+        url,
+      )
+      if response.ok:
+        return data
+    return
 
   def kvWrite(self, key, value):
     key = key.replace(':', '-')
