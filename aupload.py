@@ -2,7 +2,7 @@ import os
 import argparse
 import requests
 import time
-import randint
+import random
 
 ASANA_PAT = os.environ.get('ASANA_PAT')
 PROJECT_ID = os.environ.get('PROJECT_ID')
