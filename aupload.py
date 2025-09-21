@@ -52,8 +52,7 @@ class AsanaUpload:
   def upload(self):
     kv_key = f"{KV_PREFIX}__{self.filename}"
     if self.kvRead(kv_key):
-      print("ALREADY EXISTS", kv_key)
-      return
+      raise Exception(f"ALREADY EXISTS {kv_key}")
     value = {
         'file_size': self.filesize,
         'files': self.assetIds,
