@@ -3,6 +3,7 @@ import argparse
 import requests
 import time
 import random
+import sys
 
 ASANA_PAT = os.environ.get('ASANA_PAT')
 PROJECT_ID = os.environ.get('PROJECT_ID')
@@ -134,14 +135,41 @@ class AsanaUpload:
         print("Chunk upload error", response.status_code, response.text)
     raise Exception("Upload failed")
   
+def deleteAttachments(taskId):
+  url = 'https://app.asana.com/api/1.0/attachments'
+  headers = {
+        'accept': 'application/json',
+        'authorization': f'Bearer {ASANA_PAT}',
+  }
+  params = {
+    'limit': '100',
+    'parent': taskId,
+  }
+  response = requests.get(
+    url,
+    headers=headers,
+    params=params
+  )
+  attachmentList = response.json()['data']
+  attachmentIds = [a['gid'] for a in attachmentList]
+  for gid in attachmentIds:
+    url = f"https://app.asana.com/api/1.0/attachments/{gid}"
+    response = requests.delete(
+      url,
+      headers=headers
+    )
+    print(gid, "Delete status", response.status_code)
+  
 if __name__ == '__main__':
   parser = argparse.ArgumentParser(
     prog='AsanaUpload',
     description='',
     epilog=''
   )
-  parser.add_argument('filename')
-  args = parser.parse_args()
-  time.sleep(random.randint(1,10))
-  uploader = AsanaUpload(args.filename)
-  uploader.upload()
+  if len(sys.argv) > 1:
+    parser.add_argument('filename')
+    args = parser.parse_args()
+    if args.filename:
+      time.sleep(random.randint(1,10))
+      uploader = AsanaUpload(args.filename)
+      uploader.upload()
