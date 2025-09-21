@@ -11,8 +11,8 @@ env:
   DISCORD_CHANNEL_ID: ${{ secrets.DISCORD_CHANNEL_ID }}
   KV_TOKEN: ${{ secrets.KV_TOKEN }}
   STREMAGGREGATOR_KEY: ${{ secrets.STREMAGGREGATOR_KEY }}
-  ASANA_PAT: ${{ ASANA_PAT }}
-  PROJECT_ID: ${{ PROJECT_ID }}
+  ASANA_PAT: ${{ secrets.ASANA_PAT }}
+  PROJECT_ID: ${{ secrets.PROJECT_ID }}
 on:
   workflow_dispatch:
     inputs:
