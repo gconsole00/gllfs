@@ -1,6 +1,8 @@
 import os
 import argparse
 import requests
+import time
+import randint
 
 ASANA_PAT = os.environ.get('ASANA_PAT')
 PROJECT_ID = os.environ.get('PROJECT_ID')
@@ -141,5 +143,6 @@ if __name__ == '__main__':
   )
   parser.add_argument('filename')
   args = parser.parse_args()
+  time.sleep(random.randint(1,10)
   uploader = AsanaUpload(args.filename)
   uploader.upload()
