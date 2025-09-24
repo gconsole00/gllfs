@@ -93,17 +93,34 @@ jobs:
           git commit -mm || true
           git push || true
           mv ../blob .
-          
-          git lfs track "blob"
-          git add .gitattributes
-          git add blob
-          git commit -mm
-          export GIT_LFS_FORCE_PROGRESS=1
-          git push --progress
 
-          split -b 10000000 -da 5 blob "blob-"
-          cp ../dis.py .
-          python dis.py
+          export GIT_LFS_FORCE_PROGRESS=1
+          split -b 500000000 -da 2 blob blob-
+          
+          git lfs track "blob-*"
+          git add .gitattributes
+          git add blob-00 || true; git commit -mm || true; git push --progress || true
+          git add blob-01 || true; git commit -mm || true; git push --progress || true
+          git add blob-02 || true; git commit -mm || true; git push --progress || true
+          git add blob-03 || true; git commit -mm || true; git push --progress || true
+          git add blob-04 || true; git commit -mm || true; git push --progress || true
+          git add blob-05 || true; git commit -mm || true; git push --progress || true
+          git add blob-06 || true; git commit -mm || true; git push --progress || true
+          git add blob-07 || true; git commit -mm || true; git push --progress || true
+          git add blob-08 || true; git commit -mm || true; git push --progress || true
+          git add blob-09 || true; git commit -mm || true; git push --progress || true
+          git add blob-10 || true; git commit -mm || true; git push --progress || true
+          git add blob-11 || true; git commit -mm || true; git push --progress || true
+          git add blob-12 || true; git commit -mm || true; git push --progress || true
+          git add blob-13 || true; git commit -mm || true; git push --progress || true
+          git add blob-14 || true; git commit -mm || true; git push --progress || true
+          git add blob-15 || true; git commit -mm || true; git push --progress || true
+          git add blob-16 || true; git commit -mm || true; git push --progress || true
+          git add blob-17 || true; git commit -mm || true; git push --progress || true
+          git add blob-18 || true; git commit -mm || true; git push --progress || true
+          git add blob-19 || true; git commit -mm || true; git push --progress || true
+
+
 
       - name: Epilogue
         run: |
