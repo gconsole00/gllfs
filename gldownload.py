@@ -84,12 +84,12 @@ def trySremsrc(imdbId):
 def tryTorrentio(imdbId):
     stream_url = ""
     if ":" in imdbId:
-        stream_url = "https://torrentio.strem.fun/qualityfilter=4k%7Csizefilter=6GB%7Cdebridoptions=nodownloadlinks,nocatalog%7Ctorbox={}/stream/series/{}.json".format(
+        stream_url = "https://torrentio.strem.fun/qualityfilter=4k%7Csizefilter=10GB%7Cdebridoptions=nodownloadlinks,nocatalog%7Ctorbox={}/stream/series/{}.json".format(
             TB_API_KEY,
             imdbId
         )
     else:
-        stream_url = "https://torrentio.strem.fun/qualityfilter=4k%7Csizefilter=6GB%7Cdebridoptions=nodownloadlinks,nocatalog%7Ctorbox={}/stream/movie/{}.json".format(
+        stream_url = "https://torrentio.strem.fun/qualityfilter=4k%7Csizefilter=10GB%7Cdebridoptions=nodownloadlinks,nocatalog%7Ctorbox={}/stream/movie/{}.json".format(
             TB_API_KEY,
             imdbId
         )
