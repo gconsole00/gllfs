@@ -1,0 +1,84 @@
+name: "ASANA"
+run-name: "${{ github.event.inputs.mid }} ASANA"
+env:
+  DESCRIPTION: ${{ github.event.repository.description }}
+  VIDLINK_ADDON_URL: ${{ secrets.VIDLINK_ADDON_URL }}
+  TB_API_KEY: ${{ secrets.TB_API_KEY }}
+  GH_TOKEN: ${{ secrets.RELEASE_GH_TOKEN }}
+  DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+  DISCORD_BOT_TOKEN_1: ${{ secrets.DISCORD_BOT_TOKEN_1 }}
+  DISCORD_BOT_TOKEN_2: ${{ secrets.DISCORD_BOT_TOKEN_2 }}
+  DISCORD_CHANNEL_ID: ${{ secrets.DISCORD_CHANNEL_ID }}
+  KV_TOKEN: ${{ secrets.KV_TOKEN }}
+  STREMAGGREGATOR_KEY: ${{ secrets.STREMAGGREGATOR_KEY }}
+  ASANA_PAT: ${{ secrets.ASANA_PAT }}
+  PROJECT_ID: ${{ secrets.PROJECT_ID }}
+  SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+  SLACK_CHANNEL_ID: ${{ secrets.SLACK_CHANNEL_ID }}
+on:
+  workflow_dispatch:
+    inputs:
+      mask_log:
+        description: ''
+        required: true
+        default: 'true'
+        type: boolean    
+      mid:
+        required: true
+
+jobs:
+  push-script:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Mask log
+        if: ${{ github.event.inputs.mask_log == 'true' }}
+        run: |
+          echo "::add-mask::a"
+          echo "::add-mask::b"
+          echo "::add-mask::c"
+          echo "::add-mask::d"
+          echo "::add-mask::e"
+          echo "::add-mask::f"       
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Setup
+        if: ${{ !github.event.repository.is_template }}
+        run: |
+          curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash
+          aria2c -x 16 "https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linux64-gpl.tar.xz"
+          tar -xvf ffmpeg-master-latest-linux64-gpl.tar.xz
+          sudo mv ffmpeg-master-latest-linux64-gpl/bin/* /usr/local/bin
+          rm -rf ffmpeg-master-latest-linux64-gpl.tar.xz
+          sudo rm -rf ffmpeg-master-latest-linux64-gpl
+          wget https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp
+          chmod +x yt-dlp
+          sudo mv yt-dlp /usr/local/bin
+          sudo chmod +x /usr/local/bin/yt-dlp
+      - name: Setup git
+        run: |
+          git config --global core.compression 1
+          git config --global http.postBuffer 524288000
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global lfs.activitytimeout 600
+          
+          
+      - name: TBDLGL
+        run: |
+          git pull
+          export REPO_ID=$(echo "${{ github.event.inputs.mid }}" | sed 's/:/-/g')
+          export ID=${{ github.event.inputs.mid }}
+          export FILE_NAME=${{ github.event.inputs.mid }}
+          export IMDB_ID=${{ github.event.inputs.mid }}
+
+          python gldownload.py
+          mv blob "$REPO_ID"
+          python supload.py -f "$REPO_ID"
+          
+      - name: Send telegram
+        if: failure()
+        run: |
+          curl "https://api.telegram.org/${{secrets.TG_BOTID_TOKEN}}/sendMessage?chat_id=${{secrets.TG_CHAT_ID}}&text=ASANA_Action_Failed_For%20${{ github.event.inputs.mid }}%20https://github.com/gconsole00/gllfs/actions/runs/${{github.run_id}}"
