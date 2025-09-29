@@ -4,8 +4,8 @@ import json
 import requests
 
 
-BOT_TOKEN = os.environ['BOT_TOKEN']
-CHANNEL_ID = os.environ['CHANNEL_ID']
+SLACK_BOT_TOKEN = os.environ['SLACK_BOT_TOKEN']
+SLACK_CHANNEL_ID = os.environ['SLACK_CHANNEL_ID']
 KV_TOKEN = os.environ['KV_TOKEN']
 CHUNK_SIZE = 1000000000
 KV_PREFIX = "SLACK"
@@ -39,7 +39,7 @@ class SlackUpload:
   def generateUploadUrl(self, chunkName, chunk):
     url = "https://slack.com/api/files.getUploadURLExternal"
     data = {
-      'token':(None, BOT_TOKEN),
+      'token':(None, SLACK_BOT_TOKEN),
       'length': (None, len(chunk)),
       'filename': (None, chunkName)
     }
@@ -64,9 +64,9 @@ class SlackUpload:
     url = "https://slack.com/api/files.completeUploadExternal"
 
     payload = {
-        "token": (None, BOT_TOKEN),
+        "token": (None, SLACK_BOT_TOKEN),
         "files": (None, json.dumps(self.uploadedChunks)),
-        "channel_id": (None, CHANNEL_ID)
+        "channel_id": (None, SLACK_CHANNEL_ID)
     }
 
     response = requests.post(url, files=payload)
@@ -92,6 +92,7 @@ class SlackUpload:
           chunkName,
           chunk
         )
+        print(i, chunkName)
         self.uploadedChunks.append(
           {"id":chunkId, "title":chunkName}
         )
@@ -101,7 +102,7 @@ class SlackUpload:
       'files': self.uploadedChunks
     }
     self.kvWrite(
-      f'{KV_PREFIX}__{self.filename}',
+      f'SLACK__{self.filename}',
       metadata
     )
   
