@@ -66,7 +66,8 @@ class SlackUpload:
     payload = {
         "token": (None, SLACK_BOT_TOKEN),
         "files": (None, json.dumps(self.uploadedChunks)),
-        "channel_id": (None, SLACK_CHANNEL_ID)
+        "channel_id": (None, SLACK_CHANNEL_ID),
+        "initial_comment": self.filename
     }
 
     response = requests.post(url, files=payload)
