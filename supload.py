@@ -7,7 +7,7 @@ import requests
 SLACK_BOT_TOKEN = os.environ['SLACK_BOT_TOKEN']
 SLACK_CHANNEL_ID = os.environ['SLACK_CHANNEL_ID']
 KV_TOKEN = os.environ['KV_TOKEN']
-CHUNK_SIZE = 1000000000
+CHUNK_SIZE = 500000000
 KV_PREFIX = "SLACK"
 KV_BASE = "https://kv-waterfall-b86c.hostproxy.workers.dev"
 
