@@ -11,7 +11,7 @@ on:
       mask_log:
         description: ''
         required: true
-        default: 'false'
+        default: 'true'
         type: boolean    
       mid:
         required: true
@@ -77,40 +77,34 @@ jobs:
           git push -f || true
           mv ../video.mp4 .
 
-          #ffmpeg \
-          #-i video.mp4 -map 0:v -map 0:a \
-          #-c copy -start_number 0 -hls_time 6 -hls_list_size 0 \
-          #-f hls index.m3u8
-
-          ffmpeg -i video.mp4 \
-          -map 0 -c copy -f dash \
-          -seg_duration 6 \
-          index.mpd
+          ffmpeg \
+          -i video.mp4 -map 0:v -map 0:a \
+          -c copy -start_number 0 -hls_time 6 -hls_list_size 0 \
+          -f hls index.m3u8
 
           rm -rf video.mp4
 
-          git add *20* 2>/dev/null; git commit -m a; git push
-          git add *19* 2>/dev/null; git commit -m a; git push
-          git add *18* 2>/dev/null; git commit -m a; git push
-          git add *17* 2>/dev/null; git commit -m a; git push
-          git add *16* 2>/dev/null; git commit -m a; git push
-          git add *15* 2>/dev/null; git commit -m a; git push
-          git add *14* 2>/dev/null; git commit -m a; git push
-          git add *13* 2>/dev/null; git commit -m a; git push
-          git add *12* 2>/dev/null; git commit -m a; git push
-          git add *11* 2>/dev/null; git commit -m a; git push
-          git add *10* 2>/dev/null; git commit -m a; git push
-          git add *9* 2>/dev/null; git commit -m a; git push
-          git add *8* 2>/dev/null; git commit -m a; git push
-          git add *7* 2>/dev/null; git commit -m a; git push
-          git add *6* 2>/dev/null; git commit -m a; git push
-          git add *5* 2>/dev/null; git commit -m a; git push
-          git add *4* 2>/dev/null; git commit -m a; git push
-          git add *3* 2>/dev/null; git commit -m a; git push
-          git add *2* 2>/dev/null; git commit -m a; git push
-          git add *1* 2>/dev/null; git commit -m a; git push
+          git add index20* 2>/dev/null; git commit -m a; git push
+          git add index19* 2>/dev/null; git commit -m a; git push
+          git add index18* 2>/dev/null; git commit -m a; git push
+          git add index17* 2>/dev/null; git commit -m a; git push
+          git add index16* 2>/dev/null; git commit -m a; git push
+          git add index15* 2>/dev/null; git commit -m a; git push
+          git add index14* 2>/dev/null; git commit -m a; git push
+          git add index13* 2>/dev/null; git commit -m a; git push
+          git add index12* 2>/dev/null; git commit -m a; git push
+          git add index11* 2>/dev/null; git commit -m a; git push
+          git add index10* 2>/dev/null; git commit -m a; git push
+          git add index9* 2>/dev/null; git commit -m a; git push
+          git add index8* 2>/dev/null; git commit -m a; git push
+          git add index7* 2>/dev/null; git commit -m a; git push
+          git add index6* 2>/dev/null; git commit -m a; git push
+          git add index5* 2>/dev/null; git commit -m a; git push
+          git add index4* 2>/dev/null; git commit -m a; git push
+          git add index3* 2>/dev/null; git commit -m a; git push
+          git add index2* 2>/dev/null; git commit -m a; git push
+          git add index1* 2>/dev/null; git commit -m a; git push
           git add . || true
-          git add index.mpd
           git commit -m m || true
           git push || true
 
