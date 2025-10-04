@@ -11,7 +11,7 @@ on:
       mask_log:
         description: ''
         required: true
-        default: 'true'
+        default: 'false'
         type: boolean    
       mid:
         required: true
