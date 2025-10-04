@@ -110,7 +110,7 @@ jobs:
           git add *2* 2>/dev/null; git commit -m a; git push
           git add *1* 2>/dev/null; git commit -m a; git push
           git add . || true
-          git add index.mpd | true
+          git add index.mpd
           git commit -m m || true
           git push || true
 
