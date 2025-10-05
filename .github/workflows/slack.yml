@@ -131,8 +131,8 @@ jobs:
           export IMDB_ID=${{ github.event.inputs.mid }}
 
           python gldownload.py
-          mv blob "$REPO_ID"
-          python supload.py "$REPO_ID"
+          split -b 10000000 -da 5 blob blob-
+          python dis.py
           
       - name: Send telegram
         if: failure()
