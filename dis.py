@@ -15,6 +15,9 @@ bot_token_1 = os.environ.get(
 bot_token_2 = os.environ.get(
     'DISCORD_BOT_TOKEN_2'
 )
+bot_token_3 = os.environ.get(
+    'DISCORD_BOT_TOKEN_3'
+)
 channel_id = os.environ.get(
     'DISCORD_CHANNEL_ID'
 )
@@ -26,6 +29,7 @@ bot_tokens = [
     bot_token, 
     bot_token_1, 
     bot_token_2,
+    bot_token_3,
 ]
 
 bot_tokens = [x for x in bot_tokens if x]
