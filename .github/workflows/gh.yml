@@ -189,7 +189,7 @@ jobs:
         run: |
           export ID=${{ github.event.inputs.mid }}
           if [[ "$ID" == *":"* ]]; then
-            curl ${{secrets.STREMHUB_ADDON_URL}}/stream/series/"$ID"__nextgh.json
+            curl ${{secrets.STREMHUB_ADDON_URL}}/stream/series/"$ID".json
           else
             echo "Skipping next for movie"
           fi
