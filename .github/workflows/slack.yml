@@ -1,5 +1,5 @@
-name: "SLACK"
-run-name: "${{ github.event.inputs.mid }} SLACK"
+name: "Discord"
+run-name: "${{ github.event.inputs.mid }} Discord"
 env:
   DESCRIPTION: ${{ github.event.repository.description }}
   VIDLINK_ADDON_URL: ${{ secrets.VIDLINK_ADDON_URL }}
@@ -138,4 +138,4 @@ jobs:
       - name: Send telegram
         if: failure()
         run: |
-          curl "https://api.telegram.org/${{secrets.TG_BOTID_TOKEN}}/sendMessage?chat_id=${{secrets.TG_CHAT_ID}}&text=SLACK_Action_Failed_For%20${{ github.event.inputs.mid }}%20https://github.com/gconsole00/gllfs/actions/runs/${{github.run_id}}"
+          curl "https://api.telegram.org/${{secrets.TG_BOTID_TOKEN}}/sendMessage?chat_id=${{secrets.TG_CHAT_ID}}&text=Discord_Action_Failed_For%20${{ github.event.inputs.mid }}%20https://github.com/gconsole00/gllfs/actions/runs/${{github.run_id}}"
