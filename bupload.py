@@ -87,7 +87,7 @@ class Blogger:
       if response.ok and not 'AUTH_REQUIRED' in response.text:
         return response.headers['x-goog-upload-url']
       else:
-        print("Error:getUploadUrl", response.status_code, response.text)
+        print("Error:getUploadUrl", response.status_code, response.text, flush=True)
         self.refreshAccessToken()
     raise Exception()
   
@@ -126,10 +126,13 @@ class Blogger:
           lock.release()
           return url
         else:
-          print(f"Error:uploadChunk attempt {i}", chunkNumber, response.status_code, response.text)
+          print(
+            f"Error:uploadChunk attempt {i}", chunkNumber, response.status_code, response.text,
+            flush=True
+          )
           raise Exception()
       except Exception as e:
-        print(e)
+        print(e, flush=True)
         time.sleep(1)
 
   def kvWrite(self, key, value):
@@ -153,7 +156,7 @@ class Blogger:
   def kvRead(self, key):
     key = key.replace(':', '-')
     url = f'{KV_BASE}/key/{key}'
-    print(url)
+    print(url, flush=True)
     response = None
     for i in range(3):
       response = requests.get(
@@ -176,7 +179,7 @@ class Blogger:
           t.start()
           threads.append(t)
           chunkNumber += 1
-          print("Uploaded", len(self.imageUrls), "of", expectedChunks)
+          print("Uploaded", len(self.imageUrls), "of", expectedChunks, flush=True)
           if len(threads) == PARALLEL_THREADS:
             [x.join() for x in threads]
             threads = []
@@ -196,7 +199,7 @@ class Blogger:
     if len(value['files']) != expectedChunks:
       raise Exception("Expected and actual chunks dont match", len(value['files']), "!=", expectedChunks)
     else:
-      print("Expected and actual chunk count match", len(value['files']), "==", expectedChunks)
+      print("Expected and actual chunk count match", len(value['files']), "==", expectedChunks, flush=True)
     self.kvWrite(kv_key, value)
   
   def download(self):
