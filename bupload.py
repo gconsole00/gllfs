@@ -1,9 +1,11 @@
 import os
+import sys
 import math
 import time
 import json
 import dotenv
 import requests
+import argparse
 import threading
 from bin2png import data_to_png_data, png_data_to_data
 dotenv.load_dotenv()
@@ -207,3 +209,17 @@ class Blogger:
         url, ogLength = url.split(LEN_DELIMITER)
         data = requests.get(url).content
         f.write(png_data_to_data(data, int(ogLength)))
+
+
+if __name__ == '__main__':
+  parser = argparse.ArgumentParser(
+    prog='AsanaUpload',
+    description='',
+    epilog=''
+  )
+  if len(sys.argv) > 1:
+    parser.add_argument('filename')
+    args = parser.parse_args()
+    if args.filename:
+      uploader = Blogger(args.filename)
+      uploader.upload()
