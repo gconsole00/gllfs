@@ -1,0 +1,135 @@
+name: "BLOGGER"
+run-name: "${{ github.event.inputs.mid }} BLOGGER"
+env:
+  DESCRIPTION: ${{ github.event.repository.description }}
+  VIDLINK_ADDON_URL: ${{ secrets.VIDLINK_ADDON_URL }}
+  TB_API_KEY: ${{ secrets.TB_API_KEY }}
+  GH_TOKEN: ${{ secrets.RELEASE_GH_TOKEN }}
+  KV_TOKEN: ${{ secrets.KV_TOKEN }}
+  STREMAGGREGATOR_KEY: ${{ secrets.STREMAGGREGATOR_KEY }}
+  BLOGGER_CLIENT_ID:  ${{ secrets.BLOGGER_CLIENT_ID }}
+  BLOGGER_CLIENT_SECRET:  ${{ secrets.BLOGGER_CLIENT_SECRET }}
+  BLOGGER_REFRESH_TOKEN:  ${{ secrets.BLOGGER_REFRESH_TOKEN }}
+  BLOGGER_ALBUM_ID:  ${{ secrets.BLOGGER_ALBUM_ID }}
+on:
+  workflow_dispatch:
+    inputs:
+      mask_log:
+        description: ''
+        required: true
+        default: 'true'
+        type: boolean    
+      mid:
+        required: true
+jobs:
+  push-script:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Mask log
+        if: ${{ github.event.inputs.mask_log == 'true' }}
+        run: |
+          echo "::add-mask::0"
+          echo "::add-mask::1"
+          echo "::add-mask::2"
+          echo "::add-mask::3"
+          echo "::add-mask::4"
+          echo "::add-mask::5"
+          echo "::add-mask::6"
+          echo "::add-mask::7"
+          echo "::add-mask::8"
+          echo "::add-mask::9"
+          echo "::add-mask::A"
+          echo "::add-mask::B"
+          echo "::add-mask::C"
+          echo "::add-mask::D"
+          echo "::add-mask::E"
+          echo "::add-mask::F"
+          echo "::add-mask::G"
+          echo "::add-mask::H"
+          echo "::add-mask::I"
+          echo "::add-mask::J"
+          echo "::add-mask::K"
+          echo "::add-mask::L"
+          echo "::add-mask::M"
+          echo "::add-mask::N"
+          echo "::add-mask::O"
+          echo "::add-mask::P"
+          echo "::add-mask::Q"
+          echo "::add-mask::R"
+          echo "::add-mask::S"
+          echo "::add-mask::T"
+          echo "::add-mask::U"
+          echo "::add-mask::V"
+          echo "::add-mask::W"
+          echo "::add-mask::X"
+          echo "::add-mask::Y"
+          echo "::add-mask::Z"
+          echo "::add-mask::a"
+          echo "::add-mask::b"
+          echo "::add-mask::c"
+          echo "::add-mask::d"
+          echo "::add-mask::e"
+          echo "::add-mask::f"
+          echo "::add-mask::g"
+          echo "::add-mask::h"
+          echo "::add-mask::i"
+          echo "::add-mask::j"
+          echo "::add-mask::k"
+          echo "::add-mask::l"
+          echo "::add-mask::m"
+          echo "::add-mask::n"
+          echo "::add-mask::o"
+          echo "::add-mask::p"
+          echo "::add-mask::q"
+          echo "::add-mask::r"
+          echo "::add-mask::s"
+          echo "::add-mask::t"
+          echo "::add-mask::u"
+          echo "::add-mask::v"
+          echo "::add-mask::w"
+          echo "::add-mask::x"
+          echo "::add-mask::y"
+          echo "::add-mask::z"
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Setup
+        if: ${{ !github.event.repository.is_template }}
+        run: |
+          aria2c -x 16 "https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linux64-gpl.tar.xz"
+          tar -xvf ffmpeg-master-latest-linux64-gpl.tar.xz
+          sudo mv ffmpeg-master-latest-linux64-gpl/bin/* /usr/local/bin
+          rm -rf ffmpeg-master-latest-linux64-gpl.tar.xz
+          sudo rm -rf ffmpeg-master-latest-linux64-gpl
+          wget https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp
+          chmod +x yt-dlp
+          sudo mv yt-dlp /usr/local/bin
+          sudo chmod +x /usr/local/bin/yt-dlp
+          pip install -r requirements.txt
+      - name: Setup git
+        run: |
+          git config --global core.compression 1
+          git config --global http.postBuffer 524288000
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global lfs.activitytimeout 600
+          
+          
+      - name: TBDLGL
+        run: |
+          git pull
+          export REPO_ID=$(echo "${{ github.event.inputs.mid }}" | sed 's/:/-/g')
+          export ID=${{ github.event.inputs.mid }}
+          export FILE_NAME=${{ github.event.inputs.mid }}
+          export IMDB_ID=${{ github.event.inputs.mid }}
+
+          python gldownload.py
+          mv blob "$REPO_ID"
+          python bupload.py "$REPO_ID"
+          
+      - name: Send telegram
+        if: failure()
+        run: |
+          curl "https://api.telegram.org/${{secrets.TG_BOTID_TOKEN}}/sendMessage?chat_id=${{secrets.TG_CHAT_ID}}&text=BLOGGER_Action_Failed_For%20${{ github.event.inputs.mid }}%20https://github.com/gconsole00/gllfs/actions/runs/${{github.run_id}}"
