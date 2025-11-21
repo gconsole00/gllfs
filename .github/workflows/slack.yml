@@ -133,7 +133,7 @@ jobs:
 
           python gldownload.py
           split -b 10000000 -da 5 blob blob-
-          python dis.py
+          python disc.py
           
       - name: Send telegram
         if: failure()
