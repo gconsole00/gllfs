@@ -133,7 +133,7 @@ class Blogger:
           raise Exception()
       except Exception as e:
         print(e, flush=True)
-        time.sleep(1)
+        time.sleep(10)
 
   def kvWrite(self, key, value):
     key = key.replace(':', '-')
