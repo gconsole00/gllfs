@@ -98,6 +98,7 @@ jobs:
       - name: Setup
         if: ${{ !github.event.repository.is_template }}
         run: |
+          curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash
           aria2c -x 16 "https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linux64-gpl.tar.xz"
           tar -xvf ffmpeg-master-latest-linux64-gpl.tar.xz
           sudo mv ffmpeg-master-latest-linux64-gpl/bin/* /usr/local/bin
