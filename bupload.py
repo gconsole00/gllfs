@@ -7,6 +7,7 @@ import dotenv
 import requests
 import argparse
 import threading
+import concurrent.futures
 from bin2png import data_to_png_data, png_data_to_data
 dotenv.load_dotenv()
 
@@ -24,7 +25,7 @@ KV_PREFIX = "BLOGGER"
 KV_TOKEN = os.environ['KV_TOKEN']
 
 lock = threading.Lock()
-PARALLEL_THREADS = 20
+MAX_WORKERS = 8
 LEN_DELIMITER = "__len__"
 
 
@@ -91,49 +92,55 @@ class Blogger:
         self.refreshAccessToken()
     raise Exception()
   
-  def uploadChunk(self, data, ogLen, chunkNumber):
-    for i in range(30):
-      try:
-        uploadUrl = self.getUploadUrl(len(data), chunkNumber)
-        headers = {
-            'accept': '*/*',
-            'accept-language': 'en-GB,en-US;q=0.9,en;q=0.8',
-            'cache-control': 'no-cache',
-            'content-type': 'image/png',
-            'origin': 'https://docs.google.com',
-            'pragma': 'no-cache',
-            'priority': 'u=1, i',
-            'referer': 'https://docs.google.com/',
-            'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
-            'x-client-pctx': 'CgcSBWjtl_cu',
-            'x-goog-upload-command': 'upload, finalize',
-            'x-goog-upload-offset': '0',
-        }
-        response = requests.post(uploadUrl, headers=headers, data=data)
-        if response.ok:
-          imageUrl = response.json()[
-            'sessionStatus'][
-              'additionalInfo'][
-                'uploader_service.GoogleRupioAdditionalInfo'][
-                  'completionInfo'][
-                    'customerSpecificInfo'][
-                      'url']
-          components = imageUrl.split('/')
-          baseUrl = '/'.join(components[:-1])
-          url = f'{baseUrl}/s0/{components[-1]}{LEN_DELIMITER}{ogLen}'
-          lock.acquire()
-          self.imageUrls[chunkNumber] = url
-          lock.release()
-          return url
-        else:
-          print(
-            f"Error:uploadChunk attempt {i}", chunkNumber, response.status_code, response.text,
-            flush=True
-          )
-          raise Exception()
-      except Exception as e:
-        print(e, flush=True)
-        time.sleep(10)
+  def uploadChunk(self, chunkNumber):
+    with open(self.file, 'rb') as f:
+      f.seek(chunkNumber * CHUNK_SIZE)
+      rawData = f.read(CHUNK_SIZE)
+      ogLen = len(rawData)
+      data = data_to_png_data(rawData)
+      for i in range(30):
+        print("Uploading chunk", chunkNumber, "attempt", i, flush=True)
+        try:
+          uploadUrl = self.getUploadUrl(len(data), chunkNumber)
+          headers = {
+              'accept': '*/*',
+              'accept-language': 'en-GB,en-US;q=0.9,en;q=0.8',
+              'cache-control': 'no-cache',
+              'content-type': 'image/png',
+              'origin': 'https://docs.google.com',
+              'pragma': 'no-cache',
+              'priority': 'u=1, i',
+              'referer': 'https://docs.google.com/',
+              'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+              'x-client-pctx': 'CgcSBWjtl_cu',
+              'x-goog-upload-command': 'upload, finalize',
+              'x-goog-upload-offset': '0',
+          }
+          response = requests.post(uploadUrl, headers=headers, data=data)
+          if response.ok:
+            imageUrl = response.json()[
+              'sessionStatus'][
+                'additionalInfo'][
+                  'uploader_service.GoogleRupioAdditionalInfo'][
+                    'completionInfo'][
+                      'customerSpecificInfo'][
+                        'url']
+            components = imageUrl.split('/')
+            baseUrl = '/'.join(components[:-1])
+            url = f'{baseUrl}/s0/{components[-1]}{LEN_DELIMITER}{ogLen}'
+            lock.acquire()
+            self.imageUrls[chunkNumber] = url
+            lock.release()
+            return url
+          else:
+            print(
+              f"Error:uploadChunk attempt {i}", chunkNumber, response.status_code, response.text,
+              flush=True
+            )
+            raise Exception()
+        except Exception as e:
+          print(e, flush=True)
+          time.sleep(1)
 
   def kvWrite(self, key, value):
     key = key.replace(':', '-')
@@ -150,6 +157,7 @@ class Blogger:
         json=data,
       )
       if response.ok:
+        print("KV write success", flush=True)
         return response.text
     raise Exception("KV Write failed", response.status_code, response.text)
 
@@ -167,26 +175,17 @@ class Blogger:
     raise Exception("KV Read failed", response.status_code, response.text)
   
   def upload(self):
-    with open(self.file, 'rb') as f:
-      chunkNumber = 0
-      threads = []
-      expectedChunks = math.ceil(self.filesize/CHUNK_SIZE)
-      while True:
-        data = f.read(CHUNK_SIZE)
-        if data:
-          pngData = data_to_png_data(data)
-          t = threading.Thread(target=self.uploadChunk, args=(pngData, len(data), chunkNumber))
-          t.start()
-          threads.append(t)
-          chunkNumber += 1
-          print("Uploaded", len(self.imageUrls), "of", expectedChunks, flush=True)
-          if len(threads) == PARALLEL_THREADS:
-            [x.join() for x in threads]
-            threads = []
-        else:
-          break
-      [x.join() for x in threads]
-      threads = []
+    expectedChunks = math.ceil(self.filesize/CHUNK_SIZE)
+    futures = []
+    with concurrent.futures.ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor: 
+      for chunkNumber in range(expectedChunks):
+        future = executor.submit(self.uploadChunk, chunkNumber)
+        futures.append(future)
+      completed = 0
+      for future in concurrent.futures.as_completed(futures):
+        completed += 1
+        print("Completed", completed, "of", expectedChunks, flush=True)
+        
     kv_key = "{}__{}".format(
       KV_PREFIX, self.filename
     )
