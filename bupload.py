@@ -18,7 +18,7 @@ REFRESH_TOKEN = os.environ['BLOGGER_REFRESH_TOKEN']
 ALBUM_ID = os.environ['BLOGGER_ALBUM_ID']
 
 REFRESH_TOKEN_EP = "https://oauth2.googleapis.com/token"
-CHUNK_SIZE = 50000000
+CHUNK_SIZE = 20000000
 
 KV_BASE = "https://kv-waterfall-b86c.hostproxy.workers.dev"
 KV_PREFIX = "BLOGGER"
