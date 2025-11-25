@@ -34,7 +34,7 @@ def data_to_png_data(raw_data):
     img = Image.frombytes('RGB', (width, height), padded_data)
     # 5. Save Image to In-Memory Buffer
     png_buffer = io.BytesIO()
-    img.save(png_buffer, format="PNG")
+    img.save(png_buffer, format="PNG", compress_level=0)
     return png_buffer.getvalue()
 
 def png_data_to_data(data, og_length):
