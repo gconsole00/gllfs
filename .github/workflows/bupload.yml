@@ -21,6 +21,7 @@ on:
         type: boolean    
       mid:
         required: true
+      url:
 jobs:
   push-script:
     runs-on: ubuntu-latest
@@ -125,8 +126,12 @@ jobs:
           export ID=${{ github.event.inputs.mid }}
           export FILE_NAME=${{ github.event.inputs.mid }}
           export IMDB_ID=${{ github.event.inputs.mid }}
-
-          python gldownload.py
+          export URL=${{ github.event.inputs.url }}
+          if [ -z "$URL" ]; then
+              python gldownload.py
+          else
+              aria2c -x16 -j16 "$URL" -o blob
+          fi
           mv blob "$REPO_ID"
           python bupload.py "$REPO_ID"
           
