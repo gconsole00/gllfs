@@ -36,58 +36,23 @@ jobs:
       - name: Mask log
         if: ${{ github.event.inputs.mask_log == 'true' }}
         run: |
-          echo "::add-mask::A"
-          echo "::add-mask::B"
-          echo "::add-mask::C"
-          echo "::add-mask::D"
-          echo "::add-mask::E"
-          echo "::add-mask::F"
-          echo "::add-mask::G"
-          echo "::add-mask::H"
-          echo "::add-mask::I"
-          echo "::add-mask::J"
-          echo "::add-mask::K"
-          echo "::add-mask::L"
-          echo "::add-mask::M"
-          echo "::add-mask::N"
-          echo "::add-mask::O"
-          echo "::add-mask::P"
-          echo "::add-mask::Q"
-          echo "::add-mask::R"
-          echo "::add-mask::S"
-          echo "::add-mask::T"
-          echo "::add-mask::U"
-          echo "::add-mask::V"
-          echo "::add-mask::W"
-          echo "::add-mask::X"
-          echo "::add-mask::Y"
-          echo "::add-mask::Z"
-          echo "::add-mask::a"
-          echo "::add-mask::b"
-          echo "::add-mask::c"
-          echo "::add-mask::d"
-          echo "::add-mask::e"
-          echo "::add-mask::f"
-          echo "::add-mask::g"
-          echo "::add-mask::h"
-          echo "::add-mask::i"
-          echo "::add-mask::j"
-          echo "::add-mask::k"
-          echo "::add-mask::l"
-          echo "::add-mask::m"
-          echo "::add-mask::n"
-          echo "::add-mask::o"
-          echo "::add-mask::p"
-          echo "::add-mask::q"
-          echo "::add-mask::r"
-          echo "::add-mask::s"
-          echo "::add-mask::t"
-          echo "::add-mask::u"
-          echo "::add-mask::v"
-          echo "::add-mask::w"
-          echo "::add-mask::x"
-          echo "::add-mask::y"
-          echo "::add-mask::z"       
+          echo "Masking numbers..."
+          for n in {0..9}; do
+            echo "::add-mask::$n"
+          done
+          echo "Masking uppercase letters..."
+          for c in {A..Z}; do
+            echo "::add-mask::$c"
+          done
+          echo "Masking lowercase letters..."
+          for c in {a..z}; do
+            echo "::add-mask::$c"
+          done
+          echo "Masking special characters..."
+          specials=' ! " # $ % & '\'' ( ) * + , - . / : ; < = > ? @ [ \ ] ^ _ ` { | } ~'
+          for s in $specials; do
+            echo "::add-mask::$s"
+          done      
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
