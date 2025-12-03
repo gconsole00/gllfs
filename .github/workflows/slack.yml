@@ -26,6 +26,7 @@ on:
         type: boolean    
       mid:
         required: true
+      url:
 
 jobs:
   push-script:
@@ -35,16 +36,6 @@ jobs:
       - name: Mask log
         if: ${{ github.event.inputs.mask_log == 'true' }}
         run: |
-          echo "::add-mask::0"
-          echo "::add-mask::1"
-          echo "::add-mask::2"
-          echo "::add-mask::3"
-          echo "::add-mask::4"
-          echo "::add-mask::5"
-          echo "::add-mask::6"
-          echo "::add-mask::7"
-          echo "::add-mask::8"
-          echo "::add-mask::9"
           echo "::add-mask::A"
           echo "::add-mask::B"
           echo "::add-mask::C"
@@ -130,8 +121,12 @@ jobs:
           export ID=${{ github.event.inputs.mid }}
           export FILE_NAME=${{ github.event.inputs.mid }}
           export IMDB_ID=${{ github.event.inputs.mid }}
-
-          python gldownload.py
+          export URL=${{ github.event.inputs.url }}
+          if [ -z "$URL" ]; then
+              python gldownload.py
+          else
+              aria2c -x16 -j16 "$URL" -o blob
+          fi
           split -b 10000000 -da 5 blob blob-
           python disc.py
           
