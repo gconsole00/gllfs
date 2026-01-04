@@ -85,6 +85,7 @@ class Blogger:
           "content-type": "application/x-www-form-urlencoded"
       }
       response = requests.post(url, data=json.dumps(payload), headers=headers, params=querystring)
+      print('uurl', response.status_code, response.text)
       if response.ok and not 'AUTH_REQUIRED' in response.text:
         return response.headers['x-goog-upload-url']
       else:
@@ -117,6 +118,7 @@ class Blogger:
               'x-goog-upload-offset': '0',
           }
           response = requests.post(uploadUrl, headers=headers, data=data)
+          print('upres', response.status_code, response.text)
           if response.ok:
             imageUrl = response.json()[
               'sessionStatus'][
