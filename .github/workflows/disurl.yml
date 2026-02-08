@@ -14,7 +14,7 @@ on:
       mask_log:
         description: ''
         required: true
-        default: 'true'
+        default: false
         type: boolean    
       dl_url:
         required: true
