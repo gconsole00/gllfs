@@ -19,7 +19,7 @@ on:
       mask_log:
         description: ''
         required: true
-        default: 'true'
+        default: true
         type: boolean    
       mid:
         required: true
