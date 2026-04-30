@@ -41,9 +41,9 @@ def tryTorrentio(imdbId):
             "https://ofs.proxyr.ovh/api/v1/bucket/4/object/remoteUpload", 
             json=payload, headers=headers
         )
+        print(response.text)
         if not response.ok:
-            raise Exception
-        print(response.json())
+            raise Exception(response.text)
         return
     raise Exception
 
