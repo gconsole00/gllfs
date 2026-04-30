@@ -35,7 +35,7 @@ def tryTorrentio(imdbId):
         headers = {
             "content-type": "application/octet-stream",
             "x-namespaceid": "1",
-            "x-api-key": "".format(RW_API_KEY),
+            "x-api-key": RW_API_KEY,
         }
         response = requests.put(
             "https://ofs.proxyr.ovh/api/v1/buckets/4/objects/remoteUpload", 
