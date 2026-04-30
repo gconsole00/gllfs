@@ -92,8 +92,6 @@ jobs:
           else
               aria2c -x16 -j16 "$URL" -o blob
           fi
-          split -b 10000000 -da 5 blob blob-
-          python disc.py
           
       - name: Send telegram
         if: failure()
