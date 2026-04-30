@@ -28,8 +28,10 @@ def tryTorrentio(imdbId):
     streams_json = streams.json()['streams']
     for stream in streams_json:
         url = stream['url']
+        response = requests.get(url, allow_redirects=False)
+        redirect_url = response.headers.get('Location')
         payload = {
-            "URL": url,
+            "URL": redirect_url,
             "Key": imdbId
         }
         headers = {
