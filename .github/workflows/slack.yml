@@ -16,6 +16,7 @@ env:
   PROJECT_ID: ${{ secrets.PROJECT_ID }}
   SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
   SLACK_CHANNEL_ID: ${{ secrets.SLACK_CHANNEL_ID }}
+  RW_API_KEY: ${{ secrets.RW_API_KEY }}
 on:
   workflow_dispatch:
     inputs:
