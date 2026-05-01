@@ -27,16 +27,16 @@ def tryTorrentio(imdbId):
     streams_json = streams.json()['streams']
     for stream in streams_json:
         url = stream['url']
-        headers = {"Range": "bytes=0-10", "User-Agent": "Mozilla"}
-        response = requests.get(url, headers=headers)
+        headers = {"User-Agent": "Mozilla"}
+        response = requests.head(url, headers=headers)
         if not response.ok:
             raise Exception(response.status_code)
         count = 0
-        while "torrentio.strem.fun" in url and count < 10:
-            response = requests.get(url, headers=headers)
+        while response.headers.get("Location") and count < 10:
+            url = response.headers.get("Location")
+            response = requests.head(url, headers=headers)
             if not response.ok:
                 raise Exception(response.status_code)
-            url = response.headers.get("Location")
             print(url)
             time.sleep(2)
             count += 1
