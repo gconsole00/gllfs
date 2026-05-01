@@ -27,7 +27,7 @@ def tryTorrentio(imdbId):
     streams_json = streams.json()['streams']
     for stream in streams_json:
         url = stream['url']
-        headers = {"Range": "bytes=0-10"}
+        headers = {"Range": "bytes=0-10", "User-Agent": "Mozilla"}
         response = requests.get(url, headers=headers)
         if not response.ok:
             raise Exception(response.status_code)
