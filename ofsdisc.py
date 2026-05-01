@@ -1,5 +1,6 @@
 import os, shlex
 import requests
+import time
 
 TB_API_KEY = os.environ['TB_API_KEY']
 IMDB_ID = os.environ['IMDB_ID']
@@ -23,7 +24,6 @@ def tryTorrentio(imdbId):
             "User-Agent": "Mozilla"
         }
     )
-    print(streams.text, streams.status_code)
     streams_json = streams.json()['streams']
     for stream in streams_json:
         url = stream['url']
@@ -37,6 +37,8 @@ def tryTorrentio(imdbId):
             if not response.ok:
                 raise Exception(response.status_code)
             url = response.headers.get("Location")
+            print(url)
+            sleep(2)
             count += 1
         payload = {
             "URL": url,
