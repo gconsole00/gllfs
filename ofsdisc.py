@@ -23,6 +23,7 @@ def tryTorrentio(imdbId):
             "User-Agent": "Mozilla"
         }
     )
+    print(streams.text, streams.status_code)
     streams_json = streams.json()['streams']
     for stream in streams_json:
         url = stream['url']
