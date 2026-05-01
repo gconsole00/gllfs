@@ -37,7 +37,6 @@ def tryTorrentio(imdbId):
             response = requests.head(url, headers=headers)
             if not response.ok:
                 raise Exception(response.status_code)
-            print(url)
             time.sleep(2)
             count += 1
         payload = {
