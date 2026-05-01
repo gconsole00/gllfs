@@ -2,20 +2,9 @@ name: "Discord"
 run-name: "${{ github.event.inputs.mid }} Discord"
 env:
   DESCRIPTION: ${{ github.event.repository.description }}
-  VIDLINK_ADDON_URL: ${{ secrets.VIDLINK_ADDON_URL }}
   TB_API_KEY: ${{ secrets.TB_API_KEY }}
-  GH_TOKEN: ${{ secrets.RELEASE_GH_TOKEN }}
-  DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
-  DISCORD_BOT_TOKEN_1: ${{ secrets.DISCORD_BOT_TOKEN_1 }}
-  DISCORD_BOT_TOKEN_2: ${{ secrets.DISCORD_BOT_TOKEN_2 }}
-  DISCORD_BOT_TOKEN_3: ${{ secrets.DISCORD_BOT_TOKEN_3 }}
-  DISCORD_CHANNEL_ID: ${{ secrets.DISCORD_CHANNEL_ID }}
   KV_TOKEN: ${{ secrets.KV_TOKEN }}
   STREMAGGREGATOR_KEY: ${{ secrets.STREMAGGREGATOR_KEY }}
-  ASANA_PAT: ${{ secrets.ASANA_PAT }}
-  PROJECT_ID: ${{ secrets.PROJECT_ID }}
-  SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-  SLACK_CHANNEL_ID: ${{ secrets.SLACK_CHANNEL_ID }}
   RW_API_KEY: ${{ secrets.RW_API_KEY }}
 on:
   workflow_dispatch:
@@ -23,7 +12,7 @@ on:
       mask_log:
         description: ''
         required: true
-        default: 'false'
+        default: 'true'
         type: boolean    
       mid:
         required: true
@@ -67,7 +56,7 @@ jobs:
           export IMDB_ID=${{ github.event.inputs.mid }}
           export URL=${{ github.event.inputs.url }}
           if [ -z "$URL" ]; then
-              python gldownload.py
+              python ofsdisc.py
           else
               aria2c -x16 -j16 "$URL" -o blob
           fi
