@@ -33,6 +33,9 @@ def tryTorrentio(imdbId):
             raise Exception(response.status_code)
         count = 0
         while response.status_code >= 300 and count < 10:
+            response = requests.get(url, headers=headers)
+            if not response.ok:
+                raise Exception(response.status_code)
             url = response.headers.get("Location")
             count += 1
         payload = {
