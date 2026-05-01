@@ -38,7 +38,7 @@ def tryTorrentio(imdbId):
                 raise Exception(response.status_code)
             url = response.headers.get("Location")
             print(url)
-            sleep(2)
+            time.sleep(2)
             count += 1
         payload = {
             "URL": url,
