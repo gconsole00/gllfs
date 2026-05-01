@@ -32,7 +32,7 @@ def tryTorrentio(imdbId):
         if not response.ok:
             raise Exception(response.status_code)
         count = 0
-        while response.status_code >= 300 and count < 10:
+        while "torrentio.strem.fun" in url and count < 10:
             response = requests.get(url, headers=headers)
             if not response.ok:
                 raise Exception(response.status_code)
