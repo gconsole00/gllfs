@@ -49,7 +49,7 @@ def tryTorrentio(imdbId):
             "x-api-key": RW_API_KEY,
         }
         response = requests.post(
-          "https://ofs.proxyr.ovh/api/v1/buckets/4/objects/remoteUpload", 
+          "https://ofs.proxyr.ovh/api/v1/buckets/4/objects?type=remote", 
           json=payload, headers=headers
         )
         return
